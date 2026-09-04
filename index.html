@@ -839,8 +839,8 @@
             <span>명단 수정</span>
           </button>
           <button id="account-open-btn" class="toolbar-btn col-span-2 !py-1 !bg-sky-50 hover:!bg-sky-100 !border-sky-300 !text-sky-800" type="button">
-            <i data-lucide="user-round" class="w-3.5 h-3.5 text-sky-600 shrink-0"></i>
-            <span id="account-status-text">🧸 내 계정</span>
+            <i data-lucide="user" class="w-3.5 h-3.5 text-sky-600 shrink-0"></i>
+            <span id="account-status-text">👤 내 계정</span>
           </button>
           <button id="auto-btn" class="toolbar-btn col-span-2 !py-1 !bg-amber-50 hover:!bg-amber-100 !border-amber-300 !text-amber-900" type="button">
             <span id="auto-btn-text">✨ 전체 자동 추첨</span>
@@ -1227,7 +1227,9 @@
             studentNames,
             configRows,
             configCols,
-            gridMatrix,
+            // Firestore does not support arrays nested inside arrays.
+            // Store the seat matrix as one flat array and rebuild it when loading.
+            gridMatrixFlat: gridMatrix.flat(),
             assignedMap,
             currentThemeId,
             lastAssignedKey,
@@ -1259,7 +1261,15 @@
             if (data.studentNames) studentNames = data.studentNames;
             if (data.configRows) configRows = data.configRows;
             if (data.configCols) configCols = data.configCols;
-            if (data.gridMatrix) gridMatrix = data.gridMatrix;
+            if (Array.isArray(data.gridMatrixFlat)) {
+              const expectedCells = configRows * configCols;
+              if (data.gridMatrixFlat.length === expectedCells) {
+                gridMatrix = Array.from(
+                  { length: configRows },
+                  (_, r) => data.gridMatrixFlat.slice(r * configCols, (r + 1) * configCols)
+                );
+              }
+            }
             if (data.assignedMap) assignedMap = data.assignedMap;
             if ('lastAssignedKey' in data) lastAssignedKey = data.lastAssignedKey || null;
             if (data.currentThemeId) {
