@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="forest">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="app-page-title">🍀 나의 행운은 어디에 ✨</title>
+
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+
+  <!-- Google Fonts: Jua, Gowun Dodum & Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&family=Noto+Sans+KR:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root, [data-theme="forest"] {
+      --bg-main: #f4fbf1;
+      --bg-grad1: #fff3e0;
+      --bg-grad2: #f3e5f5;
+      --title-color: #2e7d32;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --panel-border: #c8e6c9;
+      --toolbar-bg: #eef7e8;
+      --toolbar-btn-bg: #ffffff;
+      --toolbar-btn-border: #a5d6a7;
+      --toolbar-btn-text: #1b5e20;
+      --status-bg: #f1f8e9;
+      --status-border: #a5d6a7;
+      --status-text: #2e7d32;
+      --draw-btn-from: #ff80ab;
+      --draw-btn-to: #ff4081;
+      --draw-btn-shadow: #c2185b;
+      --seat-container-bg: #fafafa;
+      --seat-container-border: #c8e6c9;
+      --seat-empty-bg: #fffde7;
+      --seat-empty-border: #ffe082;
+      --seat-assigned-bg: #f3e5f5;
+      --seat-assigned-border: #ce93d8;
+      --seat-text: #4a148c;
+      --podium-bg: #e8f5e9;
+      --podium-border: #a5d6a7;
+      --podium-text: #1b5e20;
+    }
+
+    [data-theme="cherry"] {
+      --bg-main: #fff0f5;
+      --bg-grad1: #ffe4e1;
+      --bg-grad2: #f8e1e7;
+      --title-color: #d81b60;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --panel-border: #f8bbd0;
+      --toolbar-bg: #fce4ec;
+      --toolbar-btn-bg: #ffffff;
+      --toolbar-btn-border: #f48fb1;
+      --toolbar-btn-text: #880e4f;
+      --status-bg: #fce4ec;
+      --status-border: #f48fb1;
+      --status-text: #ad1457;
+      --draw-btn-from: #ec407a;
+      --draw-btn-to: #d81b60;
+      --draw-btn-shadow: #880e4f;
+      --seat-container-bg: #fff5f8;
+      --seat-container-border: #f8bbd0;
+      --seat-empty-bg: #ffffff;
+      --seat-empty-border: #f48fb1;
+      --seat-assigned-bg: #f8bbd0;
+      --seat-assigned-border: #e91e63;
+      --seat-text: #880e4f;
+      --podium-bg: #fce4ec;
+      --podium-border: #f48fb1;
+      --podium-text: #880e4f;
+    }
+
+    [data-theme="ocean"] {
+      --bg-main: #f0f8ff;
+      --bg-grad1: #e0f2fe;
+      --bg-grad2: #e0f7fa;
+      --title-color: #0277bd;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --panel-border: #b3e5fc;
+      --toolbar-bg: #e1f5fe;
+      --toolbar-btn-bg: #ffffff;
+      --toolbar-btn-border: #81d4fa;
+      --toolbar-btn-text: #01579b;
+      --status-bg: #e1f5fe;
+      --status-border: #81d4fa;
+      --status-text: #0277bd;
+      --draw-btn-from: #29b6f6;
+      --draw-btn-to: #0288d1;
+      --draw-btn-shadow: #01579b;
+      --seat-container-bg: #f4fbfd;
+      --seat-container-border: #b3e5fc;
+      --seat-empty-bg: #ffffff;
+      --seat-empty-border: #81d4fa;
+      --seat-assigned-bg: #b3e5fc;
+      --seat-assigned-border: #0288d1;
+      --seat-text: #01579b;
+      --podium-bg: #e1f5fe;
+      --podium-border: #81d4fa;
+      --podium-text: #01579b;
+    }
+
+    [data-theme="lavender"] {
+      --bg-main: #f8f0fc;
+      --bg-grad1: #f3e5f5;
+      --bg-grad2: #ede7f6;
+      --title-color: #6a1b9a;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --panel-border: #e1bee7;
+      --toolbar-bg: #f3e5f5;
+      --toolbar-btn-bg: #ffffff;
+      --toolbar-btn-border: #ce93d8;
+      --toolbar-btn-text: #4a148c;
+      --status-bg: #f3e5f5;
+      --status-border: #ce93d8;
+      --status-text: #6a1b9a;
+      --draw-btn-from: #ab47bc;
+      --draw-btn-to: #8e24aa;
+      --draw-btn-shadow: #4a148c;
+      --seat-container-bg: #faf5fc;
+      --seat-container-border: #e1bee7;
+      --seat-empty-bg: #ffffff;
+      --seat-empty-border: #ce93d8;
+      --seat-assigned-bg: #e1bee7;
+      --seat-assigned-border: #8e24aa;
+      --seat-text: #4a148c;
+      --podium-bg: #f3e5f5;
+      --podium-border: #ce93d8;
+      --podium-text: #4a148c;
+    }
+
+    [data-theme="sunset"] {
+      --bg-main: #fff8f0;
+      --bg-grad1: #ffe0b2;
+      --bg-grad2: #ffcc80;
+      --title-color: #e65100;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --panel-border: #ffe0b2;
+      --toolbar-bg: #fff3e0;
+      --toolbar-btn-bg: #ffffff;
+      --toolbar-btn-border: #ffb74d;
+      --toolbar-btn-text: #bf360c;
+      --status-bg: #fff3e0;
+      --status-border: #ffb74d;
+      --status-text: #e65100;
+      --draw-btn-from: #ff9800;
+      --draw-btn-to: #f57c00;
+      --draw-btn-shadow: #b71c1c;
+      --seat-container-bg: #fffbf7;
+      --seat-container-border: #ffe0b2;
+      --seat-empty-bg: #ffffff;
+      --seat-empty-border: #ffb74d;
+      --seat-assigned-bg: #ffe0b2;
+      --seat-assigned-border: #f57c00;
+      --seat-text: #bf360c;
+      --podium-bg: #fff3e0;
+      --podium-border: #ffb74d;
+      --podium-text: #bf360c;
+    }
+
+    [data-theme="neon"] {
+      --bg-main: #0f172a;
+      --bg-grad1: #1e1b4b;
+      --bg-grad2: #0f172a;
+      --title-color: #38bdf8;
+      --panel-bg: rgba(30, 41, 59, 0.95);
+      --panel-border: #334155;
+      --toolbar-bg: #1e293b;
+      --toolbar-btn-bg: #334155;
+      --toolbar-btn-border: #475569;
+      --toolbar-btn-text: #38bdf8;
+      --status-bg: #1e293b;
+      --status-border: #38bdf8;
+      --status-text: #38bdf8;
+      --draw-btn-from: #a855f7;
+      --draw-btn-to: #ec4899;
+      --draw-btn-shadow: #831843;
+      --seat-container-bg: #0f172a;
+      --seat-container-border: #334155;
+      --seat-empty-bg: #1e293b;
+      --seat-empty-border: #475569;
+      --seat-assigned-bg: #3b0764;
+      --seat-assigned-border: #a855f7;
+      --seat-text: #f472b6;
+      --podium-bg: #1e293b;
+      --podium-border: #38bdf8;
+      --podium-text: #38bdf8;
+    }
+
+    [data-theme="mint"] {
+      --bg-main: #e6f8f5;
+      --bg-grad1: #b2f5ea;
+      --bg-grad2: #e6fffa;
+      --title-color: #00796b;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --panel-border: #80cbd2;
+      --toolbar-bg: #e0f2f1;
+      --toolbar-btn-bg: #ffffff;
+      --toolbar-btn-border: #4db6ac;
+      --toolbar-btn-text: #004d40;
+      --status-bg: #e0f2f1;
+      --status-border: #4db6ac;
+      --status-text: #00796b;
+      --draw-btn-from: #26a69a;
+      --draw-btn-to: #00897b;
+      --draw-btn-shadow: #004d40;
+      --seat-container-bg: #f2fcfb;
+      --seat-container-border: #b2dfdb;
+      --seat-empty-bg: #ffffff;
+      --seat-empty-border: #4db6ac;
+      --seat-assigned-bg: #b2dfdb;
+      --seat-assigned-border: #00897b;
+      --seat-text: #004d40;
+      --podium-bg: #e0f2f1;
+      --podium-border: #4db6ac;
+      --podium-text: #004d40;
+    }
+
+    [data-theme="retro"] {
+      --bg-main: #fdf8e2;
+      --bg-grad1: #fef08a;
+      --bg-grad2: #ffedd5;
+      --title-color: #b45309;
+      --panel-bg: rgba(255, 255, 255, 0.95);
+      --panel-border: #fde047;
+      --toolbar-bg: #fef9c3;
+      --toolbar-btn-bg: #ffffff;
+      --toolbar-btn-border: #facc15;
+      --toolbar-btn-text: #854d0e;
+      --status-bg: #fef9c3;
+      --status-border: #facc15;
+      --status-text: #a16207;
+      --draw-btn-from: #f97316;
+      --draw-btn-to: #ea580c;
+      --draw-btn-shadow: #9a3412;
+      --seat-container-bg: #fffbeb;
+      --seat-container-border: #fde047;
+      --seat-empty-bg: #ffffff;
+      --seat-empty-border: #facc15;
+      --seat-assigned-bg: #fef08a;
+      --seat-assigned-border: #eab308;
+      --seat-text: #713f12;
+      --podium-bg: #fef9c3;
+      --podium-border: #facc15;
+      --podium-text: #854d0e;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Jua', sans-serif;
+      background: radial-gradient(circle at 10% 20%, var(--bg-grad1) 0%, transparent 25%),
+                  radial-gradient(circle at 90% 80%, var(--bg-grad2) 0%, transparent 25%),
+                  var(--bg-main);
+      color: #2e3b2e;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.4s ease;
+    }
+
+    * { box-sizing: border-box; }
+
+    .board-container {
+      width: 100vw;
+      height: 100vh;
+      max-width: calc(100vh * 2.1);
+      margin: auto;
+      padding: 8px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .app-header {
+      text-align: center;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    .main-title {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(1.8rem, 4.2vh, 3.1rem);
+      color: var(--title-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 0;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.8);
+      line-height: 1.1;
+      transition: color 0.3s ease;
+    }
+
+    .sub-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.85rem, 1.8vh, 1.15rem);
+      font-weight: 700;
+      color: #555555;
+      margin-top: 3px;
+    }
+
+    .content-layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(480px, 2.4fr);
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .panel-card {
+      background: var(--panel-bg);
+      border: 3px solid var(--panel-border);
+      border-radius: 20px;
+      padding: 10px 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .top-toolbar-box {
+      background: var(--toolbar-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 14px;
+      padding: 5px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    .toolbar-btn {
+      background: var(--toolbar-btn-bg);
+      border: 1.5px solid var(--toolbar-btn-border);
+      color: var(--toolbar-btn-text);
+      border-radius: 10px;
+      padding: 4px 6px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.72rem, 1.35vh, 0.88rem);
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 0 var(--toolbar-btn-border);
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .toolbar-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(0.97);
+    }
+
+    .panel-header {
+      text-align: center;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+
+    .panel-title {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(1.1rem, 2.3vh, 1.45rem);
+      color: var(--title-color);
+      margin: 0;
+    }
+
+    .student-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      gap: 4px;
+      background: var(--toolbar-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 14px;
+      padding: 6px;
+      margin-bottom: 6px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+    }
+
+    .student-num-btn {
+      background: #ffffff;
+      border: 2px solid var(--toolbar-btn-border);
+      color: var(--toolbar-btn-text);
+      border-radius: 10px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.95rem, 2vh, 1.25rem);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 2px 0 var(--toolbar-btn-border);
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .student-num-btn.is-selected {
+      background: #ffd54f !important;
+      border-color: #fbc02d !important;
+      color: #4e342e !important;
+      box-shadow: 0 2px 0 #fbc02d !important;
+      transform: scale(1.03);
+    }
+
+    .student-num-btn.is-assigned, .student-num-btn:disabled {
+      background: #eeeeee !important;
+      border-color: #e0e0e0 !important;
+      color: #bdbdbd !important;
+      box-shadow: none !important;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    .status-box {
+      background: var(--status-bg);
+      border: 2px dashed var(--status-border);
+      border-radius: 12px;
+      padding: 5px 8px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.75rem, 1.5vh, 0.98rem);
+      font-weight: 700;
+      color: var(--status-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .btn-draw {
+      background: linear-gradient(135deg, var(--draw-btn-from), var(--draw-btn-to));
+      border: none;
+      color: white;
+      border-radius: 12px;
+      padding: 6px;
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(1.15rem, 2.5vh, 1.5rem);
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--draw-btn-shadow);
+      transition: all 0.15s ease;
+      width: 100%;
+    }
+
+    .btn-draw:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 0 var(--draw-btn-shadow);
+    }
+
+    .btn-draw:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      border: 1.5px solid var(--toolbar-btn-border);
+      color: var(--toolbar-btn-text);
+      border-radius: 10px;
+      padding: 5px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.8rem, 1.6vh, 1rem);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 0 var(--toolbar-btn-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .seat-map-container {
+      background: var(--seat-container-bg);
+      border: 2px dashed var(--seat-container-border);
+      border-radius: 16px;
+      padding: 8px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+      justify-content: space-between;
+    }
+
+    .teacher-podium {
+      background: var(--podium-bg);
+      border: 2px solid var(--podium-border);
+      color: var(--podium-text);
+      border-radius: 10px;
+      padding: 5px;
+      text-align: center;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.9rem, 1.8vh, 1.15rem);
+      font-weight: 800;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .teacher-podium.pos-top { order: 0; margin-bottom: 6px; }
+    .teacher-podium.pos-bottom { order: 2; margin-top: 6px; }
+
+    .seat-grid-wrap {
+      order: 1;
+      display: grid;
+      gap: 6px;
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .seat-tile {
+      border: 2.5px solid var(--seat-empty-border);
+      border-radius: 14px;
+      background: var(--seat-empty-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 2px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.03);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+
+    .seat-heart-icon {
+      font-size: clamp(1.2rem, 3vh, 2.2rem);
+      filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.6));
+      animation: heartBounce 1.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes heartBounce {
+      0% { transform: translateY(0) scale(1) rotate(-4deg); }
+      50% { transform: translateY(-5px) scale(1.1) rotate(4deg); }
+      100% { transform: translateY(3px) scale(0.95) rotate(-2deg); }
+    }
+
+    .seat-tile.is-empty {
+      background: rgba(0,0,0,0.02);
+      border: 2px dashed #d1d5db;
+      box-shadow: none;
+    }
+
+    .seat-tile.is-assigned {
+      background: var(--seat-assigned-bg);
+      border-color: var(--seat-assigned-border);
+    }
+
+    .seat-tile.just-assigned {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      animation: seatPop 0.5s ease-out;
+    }
+
+    .seat-tile.is-roulette {
+      background: #fff9c4 !important;
+      border-color: #fbc02d !important;
+      transform: scale(1.08);
+      box-shadow: 0 0 18px rgba(251, 192, 45, 0.85);
+      z-index: 10;
+    }
+
+    @keyframes seatPop {
+      0% { transform: scale(0.8); }
+      50% { transform: scale(1.12); }
+      100% { transform: scale(1.05); }
+    }
+
+    .seat-num-badge {
+      position: absolute;
+      top: 4px;
+      left: 5px;
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(0.8rem, 1.7vh, 1.05rem);
+      color: var(--title-color);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1.5px solid var(--seat-empty-border);
+      border-radius: 8px;
+      padding: 1px 7px;
+      line-height: 1.2;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .seat-student-name {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(1.4rem, 4vh, 2.9rem);
+      color: var(--seat-text);
+      text-align: center;
+      line-height: 1.15;
+      margin-top: 8px;
+      word-break: keep-all;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border: 3px solid var(--panel-border);
+      border-radius: 22px;
+      padding: 20px;
+      width: 92%;
+      max-width: 580px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .theme-card {
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .theme-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .theme-card.active {
+      border: 2.5px solid #2563eb;
+      background: #ffffff;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    .theme-card-preview {
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .theme-card-check {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 22px;
+      height: 22px;
+      background: #2563eb;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.2s ease;
+    }
+
+    .theme-card.active .theme-card-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .editor-cell-btn {
+      padding: 5px 0;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 700;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .editor-cell-btn.is-seat {
+      background: var(--toolbar-bg);
+      border-color: var(--toolbar-btn-border);
+      color: var(--toolbar-btn-text);
+    }
+    .editor-cell-btn.is-empty {
+      background: #f5f5f5;
+      border-color: #e0e0e0;
+      color: #9e9e9e;
+    }
+
+    /* Print styling support */
+    @media print {
+      body {
+        background: white !important;
+        overflow: visible !important;
+      }
+      .board-container {
+        height: auto !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+      .draw-panel, .top-toolbar-box, .action-btn-group, .modal-overlay, .sub-title span {
+        display: none !important;
+      }
+      .content-layout {
+        display: block !important;
+      }
+      .seat-panel {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+      }
+      .seat-map-container {
+        border: 2px solid #000 !important;
+        background: #fff !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="board-container">
+
+    <header class="app-header">
+      <h1 class="main-title">
+        <span>🍀</span> <span class="dynamic-month">9월</span> <span>🍀</span> 나의 행운은 어디에 ✨
+      </h1>
+      <p class="sub-title">
+        내 번호를 고르고, 두근두근 행운의 자리를 만나 보세요!
+        <span class="inline-block ml-2 text-xs text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full font-bold border border-emerald-300/60">Made by 웅비쌤 🍀</span>
+      </p>
+    </header>
+
+    <div class="content-layout">
+
+      <aside class="panel-card draw-panel">
+
+        <div class="top-toolbar-box grid grid-cols-2 gap-1.5">
+          <button id="view-toggle-btn" class="toolbar-btn" type="button">
+            <i data-lucide="repeat" class="w-3.5 h-3.5 shrink-0"></i>
+            <span id="view-mode-label">관점: 학생</span>
+          </button>
+          <button id="theme-open-btn" class="toolbar-btn" type="button">
+            <i data-lucide="palette" class="w-3.5 h-3.5 shrink-0 text-pink-500"></i>
+            <span>색상 테마</span>
+          </button>
+          <button id="config-open-btn" class="toolbar-btn" type="button">
+            <i data-lucide="settings" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>좌석 배열</span>
+          </button>
+          <button id="names-open-btn" class="toolbar-btn" type="button">
+            <i data-lucide="users" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>명단 수정</span>
+          </button>
+          <button id="cloud-open-btn" class="toolbar-btn col-span-2 !bg-emerald-50 hover:!bg-emerald-100 !border-emerald-300 !text-emerald-800" type="button">
+            <i data-lucide="cloud" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+            <span id="cloud-status-text">☁️ 실시간 연동 (학급 코드)</span>
+          </button>
+          <button id="auto-btn" class="toolbar-btn col-span-2 !py-1 !bg-amber-50 hover:!bg-amber-100 !border-amber-300 !text-amber-900" type="button">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 shrink-0 text-amber-600"></i>
+            <span>✨ 전체 자동 추첨</span>
+          </button>
+        </div>
+
+        <div class="panel-header">
+          <h2 class="panel-title">🍀 자리 뽑기 🍀</h2>
+          <p class="panel-desc text-xs text-slate-500">내 번호를 선택한 뒤 행운 뽑기 버튼을 눌러 주세요.</p>
+        </div>
+
+        <div id="number-grid" class="student-grid" aria-label="학생 번호 선택"></div>
+
+        <div class="status-box">
+          <i data-lucide="clover" class="w-4 h-4 shrink-0"></i>
+          <span id="status-text">번호를 고르고 행운을 시작해 보세요!</span>
+        </div>
+
+        <div class="action-btn-group flex flex-col gap-1">
+          <button id="lucky-btn" class="btn-draw" type="button" disabled>
+            ✨ 행운 뽑기 ✨
+          </button>
+          <div class="grid grid-cols-2 gap-1.5 mt-1">
+            <button id="reset-btn" class="btn-secondary" type="button">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+              <span>좌석 초기화</span>
+            </button>
+            <button id="print-btn" class="btn-secondary" type="button">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              <span>배치표 인쇄</span>
+            </button>
+          </div>
+        </div>
+
+      </aside>
+
+      <section class="panel-card seat-panel">
+        <div class="panel-header flex items-center justify-between">
+          <div>
+            <h2 class="panel-title text-left">🌸 <span class="dynamic-month">9월</span> 좌석 배치표</h2>
+            <p class="panel-desc text-left text-xs text-slate-500">행운 뽑기를 누르면 좌석 상단에 번호, 중앙에 이름이 표시됩니다.</p>
+          </div>
+        </div>
+
+        <div class="seat-map-container">
+          <div id="teacher-podium" class="teacher-podium pos-top">
+            🏫 교탁 (칠판 / 선생님 위치)
+          </div>
+
+          <div id="seat-grid-wrap" class="seat-grid-wrap"></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Theme Switcher Modal -->
+  <div id="theme-modal" class="modal-overlay">
+    <div class="modal-box !max-w-xl max-h-[88vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-extrabold flex items-center gap-2 text-slate-800">
+          <span>🎨</span> 원하시는 색상 테마를 선택하세요
+        </h3>
+        <button id="theme-close-btn" class="text-slate-400 hover:text-slate-700 p-1">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 pt-2" id="theme-options-grid"></div>
+    </div>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div id="reset-modal" class="modal-overlay">
+    <div class="modal-box text-center !max-w-md p-6">
+      <div class="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-2 text-2xl font-bold">🔄</div>
+      <h3 class="text-lg font-extrabold text-slate-800">좌석을 초기화할까요?</h3>
+      <p class="text-sm text-slate-600 mt-1">배정된 모든 학생들의 좌석이 비워지며<br>처음부터 다시 뽑을 수 있습니다.</p>
+      <div class="flex gap-3 pt-4 mt-2">
+        <button id="reset-cancel-btn" class="btn-secondary flex-1 !py-2.5 !text-sm">취소</button>
+        <button id="reset-confirm-btn" class="btn-draw !py-2.5 !text-sm flex-1">확인 (초기화)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seat Layout Settings Modal -->
+  <div id="config-modal" class="modal-overlay">
+    <div class="modal-box !max-w-xl">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-extrabold flex items-center gap-2 text-slate-800">
+          <span>⚙️</span> 좌석 배열 및 구조 설정
+        </h3>
+        <button id="config-close-btn" class="text-slate-400 hover:text-slate-700 p-1">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <div class="flex gap-4 items-center text-sm font-bold text-slate-700">
+        <label class="flex items-center gap-2">
+          <span>행(줄):</span>
+          <input id="rows-input" type="number" min="1" max="10" value="5" class="w-14 border-2 border-slate-300 rounded-lg px-2 py-1 text-center font-bold text-slate-800">
+        </label>
+        <label class="flex items-center gap-2">
+          <span>열(칸):</span>
+          <input id="cols-input" type="number" min="1" max="10" value="5" class="w-14 border-2 border-slate-300 rounded-lg px-2 py-1 text-center font-bold text-slate-800">
+        </label>
+      </div>
+
+      <div class="flex gap-2 text-xs flex-wrap">
+        <button class="preset-btn btn-secondary !py-1.5 !px-3" data-preset="1col">1인 배열 (5x5)</button>
+        <button class="preset-btn btn-secondary !py-1.5 !px-3" data-preset="2pair">2인 짝꿍 (4x6)</button>
+        <button class="preset-btn btn-secondary !py-1.5 !px-3" data-preset="group">모둠 배열 (4x6)</button>
+      </div>
+
+      <p class="text-xs text-slate-500 font-medium">칸을 클릭해서 [좌석]과 [빈자리]를 변경할 수 있어요.</p>
+
+      <div id="editor-cell-grid" class="grid gap-1.5 max-h-[220px] overflow-y-auto p-2 bg-slate-50 rounded-xl border"></div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t">
+        <button id="config-apply-btn" class="btn-draw !w-auto px-6 !py-2.5 !text-sm">배열 저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Name List Edit Modal -->
+  <div id="names-modal" class="modal-overlay">
+    <div class="modal-box !max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-extrabold flex items-center gap-2 text-slate-800">
+          <span>📝</span> 학생 명단 수정
+        </h3>
+        <button id="names-close-btn" class="text-slate-400 hover:text-slate-700 p-1">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col gap-2.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
+            <span class="text-amber-500">⚡</span> 한 번에 명단 입력하기 (일괄 입력 & 파일)
+          </span>
+          <button id="bulk-clear-btn" type="button" class="text-xs text-rose-600 hover:text-rose-800 font-bold flex items-center gap-1 border border-rose-200 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-lg">
+            <i data-lucide="eraser" class="w-3.5 h-3.5 text-rose-500"></i>
+            <span>텍스트 비우기</span>
+          </button>
+        </div>
+        
+        <textarea id="bulk-names-textarea" rows="2" placeholder="이름을 띄어쓰기, 쉼표(,), 또는 줄바꿈으로 입력해주세요.&#10;예: 김규원, 김민준, 김선빈" class="w-full text-xs p-2.5 border rounded-lg resize-none focus:outline-none focus:border-emerald-500 font-sans leading-relaxed"></textarea>
+
+        <div class="flex items-center gap-2">
+          <button id="bulk-apply-btn" type="button" class="btn-secondary !py-1.5 !px-3 !text-xs flex-1">
+            <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>텍스트 일괄 입력</span>
+          </button>
+          
+          <label class="btn-secondary !py-1.5 !px-3 !text-xs flex-1 cursor-pointer justify-center">
+            <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>파일 불러오기 (.txt, .csv)</span>
+            <input type="file" id="names-file-input" accept=".txt,.csv" class="hidden">
+          </label>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs gap-2">
+        <label for="total-students-input" class="font-bold text-emerald-900 flex items-center gap-1.5 shrink-0 text-sm">
+          <span>👨‍🎓 학생 수:</span>
+        </label>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <input id="total-students-input" type="number" min="1" max="50" value="22" class="w-16 border-2 border-emerald-300 rounded-lg px-2 py-1 text-center font-bold text-emerald-800 bg-white text-sm">
+          <span class="text-slate-700 font-bold text-sm">명</span>
+        </div>
+        <button id="names-clear-all-btn" type="button" class="btn-secondary !py-1.5 !px-3 !text-xs !text-rose-700 !border-rose-300 hover:!bg-rose-50 ml-auto shrink-0 flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-500"></i>
+          <span>이름 전체 지우기</span>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-500 font-medium">각 학생 번호에 맞는 이름을 입력해 주세요.</p>
+
+      <div id="names-input-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[280px] overflow-y-auto p-1.5"></div>
+
+      <div class="flex justify-end gap-2 pt-3 border-t">
+        <button id="names-apply-btn" class="btn-draw !w-auto px-6 !py-2.5 !text-sm">이름 & 학생 수 저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cloud Sync / Class Code Modal -->
+  <div id="cloud-modal" class="modal-overlay">
+    <div class="modal-box !max-w-md p-5 text-slate-800">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-extrabold flex items-center gap-2 text-emerald-800">
+          <span>☁️</span> 교실-교무실 실시간 연동
+        </h3>
+        <button id="cloud-close-btn" class="text-slate-400 hover:text-slate-700 p-1">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-3 pt-2">
+        <p class="text-xs text-slate-600 font-medium leading-relaxed">
+          교실 컴퓨터와 교무실 컴퓨터에서 <strong class="text-emerald-700">동일한 학급 코드</strong>를 입력하면 좌석 배치 및 뽑기 결과가 실시간으로 연동됩니다.
+        </p>
+
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex flex-col gap-2">
+          <label class="text-xs font-bold text-emerald-900 flex items-center justify-between">
+            <span>🔑 학급 코드 (방 번호):</span>
+            <span id="current-room-badge" class="text-[10px] bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-full">오프라인 모드</span>
+          </label>
+          <div class="flex gap-2">
+            <input id="room-code-input" type="text" placeholder="예: 3학년2반-1004" class="flex-1 border-2 border-emerald-300 rounded-lg px-3 py-2 text-sm font-bold text-slate-800 focus:outline-none focus:border-emerald-500 bg-white">
+            <button id="room-connect-btn" class="btn-draw !w-auto !py-2 !px-4 !text-sm whitespace-nowrap">연동하기</button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+          <span>현재 상태: <strong id="cloud-conn-desc" class="text-slate-700">로컬 전용 (미연동)</strong></span>
+          <button id="room-disconnect-btn" class="text-rose-600 hover:underline font-bold hidden">연동 해제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // Firebase Setup
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'lucky-seat-picker';
+    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+      apiKey: "AIzaSyDummyKeyForStandaloneMode",
+      authDomain: "lucky-seat-picker.firebaseapp.com",
+      projectId: "lucky-seat-picker",
+      storageBucket: "lucky-seat-picker.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef"
+    };
+
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let currentRoomCode = localStorage.getItem('lucky_seat_room_code') || null;
+    let unsubscribeSync = null;
+    let isRemoteUpdate = false;
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+
+      if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+        await signInWithCustomToken(auth, __initial_auth_token);
+      } else {
+        await signInAnonymously(auth);
+      }
+      currentUser = auth.currentUser;
+    } catch (e) {
+      console.warn("Firebase initialized in fallback mode:", e);
+    }
+
+    function initApp() {
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+
+      // Dynamic month setting
+      const currentMonthNum = new Date().getMonth() + 1;
+      const monthStr = `${currentMonthNum}월`;
+      document.title = `🍀 ${monthStr} 🍀 나의 행운은 어디에 ✨`;
+      document.querySelectorAll(".dynamic-month").forEach((el) => {
+        el.textContent = monthStr;
+      });
+
+      // Application State
+      let totalStudents = 22;
+      const defaultNames = Array.from({ length: 22 }, (_, i) => `${i + 1}번`);
+      let studentNames = [...defaultNames];
+
+      let configRows = 5;
+      let configCols = 5;
+      let gridMatrix = [
+        ['empty', 'seat', 'seat', 'seat', 'seat'],
+        ['seat', 'seat', 'seat', 'seat', 'seat'],
+        ['seat', 'seat', 'seat', 'seat', 'seat'],
+        ['seat', 'seat', 'seat', 'seat', 'seat'],
+        ['seat', 'seat', 'seat', 'empty', 'empty']
+      ];
+
+      let assignedMap = {}; // "row_col" -> { num, name }
+      let selectedStudentNum = null;
+      let lastAssignedKey = null;
+      let viewPerspective = 'student';
+      let isDrawing = false;
+
+      // Themes List
+      const themeData = [
+        { id: 'forest', name: '포레스트 🍀', bg: '#eef7e8', bar: '#a5d6a7', btn: '#2e7d32' },
+        { id: 'cherry', name: '벚꽃 🌸', bg: '#fce4ec', bar: '#f48fb1', btn: '#d81b60' },
+        { id: 'ocean', name: '오션 블루 🌊', bg: '#e1f5fe', bar: '#81d4fa', btn: '#0288d1' },
+        { id: 'sunset', name: '선셋 오렌지 🌅', bg: '#fff3e0', bar: '#ffb74d', btn: '#e65100' },
+        { id: 'lavender', name: '라벤더 💜', bg: '#f3e5f5', bar: '#ce93d8', btn: '#8e24aa' },
+        { id: 'mint', name: '민트 캔디 🍬', bg: '#e0f2f1', bar: '#4db6ac', btn: '#00796b' },
+        { id: 'retro', name: '레트로 따스함 🧸', bg: '#fef9c3', bar: '#facc15', btn: '#ea580c' },
+        { id: 'neon', name: '네온 야간 🌌', bg: '#1e293b', bar: '#38bdf8', btn: '#a855f7' }
+      ];
+
+      let currentThemeId = 'forest';
+
+      // Cloud Elements
+      const cloudOpenBtn = document.getElementById("cloud-open-btn");
+      const cloudModal = document.getElementById("cloud-modal");
+      const cloudCloseBtn = document.getElementById("cloud-close-btn");
+      const roomCodeInput = document.getElementById("room-code-input");
+      const roomConnectBtn = document.getElementById("room-connect-btn");
+      const roomDisconnectBtn = document.getElementById("room-disconnect-btn");
+      const cloudStatusText = document.getElementById("cloud-status-text");
+      const cloudConnDesc = document.getElementById("cloud-conn-desc");
+      const currentRoomBadge = document.getElementById("current-room-badge");
+
+      async function saveStateToCloud() {
+        if (!db || !currentUser || !currentRoomCode || isRemoteUpdate) return;
+        try {
+          const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', currentRoomCode.trim());
+          const stateData = {
+            totalStudents,
+            studentNames,
+            configRows,
+            configCols,
+            gridMatrix,
+            assignedMap,
+            currentThemeId,
+            updatedAt: Date.now()
+          };
+          await setDoc(roomDocRef, stateData, { merge: true });
+        } catch (err) {
+          console.error("Cloud save failed:", err);
+        }
+      }
+
+      function setupCloudListener(code) {
+        if (!db || !currentUser) return;
+        if (unsubscribeSync) {
+          unsubscribeSync();
+          unsubscribeSync = null;
+        }
+
+        const roomDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', code.trim());
+        unsubscribeSync = onSnapshot(roomDocRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.data();
+            isRemoteUpdate = true;
+            if (data.totalStudents) totalStudents = data.totalStudents;
+            if (data.studentNames) studentNames = data.studentNames;
+            if (data.configRows) configRows = data.configRows;
+            if (data.configCols) configCols = data.configCols;
+            if (data.gridMatrix) gridMatrix = data.gridMatrix;
+            if (data.assignedMap) assignedMap = data.assignedMap;
+            if (data.currentThemeId) {
+              currentThemeId = data.currentThemeId;
+              document.documentElement.setAttribute('data-theme', currentThemeId);
+            }
+            renderThemeOptions();
+            renderNumberGrid();
+            renderSeatGrid();
+            isRemoteUpdate = false;
+          } else {
+            saveStateToCloud();
+          }
+        }, (err) => {
+          console.error("Firestore sync error:", err);
+        });
+      }
+
+      function updateCloudUI() {
+        if (currentRoomCode) {
+          cloudStatusText.textContent = `☁️ 연동됨 (${currentRoomCode})`;
+          cloudConnDesc.textContent = `'${currentRoomCode}' 방과 실시간 연결됨`;
+          cloudConnDesc.className = 'text-emerald-700 font-bold';
+          currentRoomBadge.textContent = '실시간 연동 중';
+          currentRoomBadge.className = 'text-[10px] bg-emerald-500 text-white font-bold px-2 py-0.5 rounded-full';
+          roomDisconnectBtn.classList.remove('hidden');
+          roomCodeInput.value = currentRoomCode;
+        } else {
+          cloudStatusText.textContent = `☁️ 실시간 연동 (학급 코드)`;
+          cloudConnDesc.textContent = '로컬 전용 (미연동)';
+          cloudConnDesc.className = 'text-slate-700';
+          currentRoomBadge.textContent = '오프라인 모드';
+          currentRoomBadge.className = 'text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full';
+          roomDisconnectBtn.classList.add('hidden');
+        }
+      }
+
+      cloudOpenBtn.addEventListener('click', () => {
+        updateCloudUI();
+        cloudModal.classList.add('open');
+      });
+
+      cloudCloseBtn.addEventListener('click', () => cloudModal.classList.remove('open'));
+
+      roomConnectBtn.addEventListener('click', () => {
+        const val = roomCodeInput.value.trim();
+        if (!val) return;
+        currentRoomCode = val;
+        localStorage.setItem('lucky_seat_room_code', currentRoomCode);
+        setupCloudListener(currentRoomCode);
+        updateCloudUI();
+        cloudModal.classList.remove('open');
+      });
+
+      roomDisconnectBtn.addEventListener('click', () => {
+        if (unsubscribeSync) {
+          unsubscribeSync();
+          unsubscribeSync = null;
+        }
+        currentRoomCode = null;
+        localStorage.removeItem('lucky_seat_room_code');
+        updateCloudUI();
+      });
+
+      // Auto reconnect on load if saved code exists
+      if (currentRoomCode) {
+        setupCloudListener(currentRoomCode);
+        updateCloudUI();
+      }
+
+      // DOM Elements
+      const numberGridEl = document.getElementById("number-grid");
+      const seatGridWrapEl = document.getElementById("seat-grid-wrap");
+      const luckyBtn = document.getElementById("lucky-btn");
+      const autoBtn = document.getElementById("auto-btn");
+      const resetBtn = document.getElementById("reset-btn");
+      const printBtn = document.getElementById("print-btn");
+      const statusTextEl = document.getElementById("status-text");
+      const viewToggleBtn = document.getElementById("view-toggle-btn");
+      const viewModeLabel = document.getElementById("view-mode-label");
+      const teacherPodiumEl = document.getElementById("teacher-podium");
+
+      // Modals & Inputs
+      const themeModal = document.getElementById("theme-modal");
+      const themeOpenBtn = document.getElementById("theme-open-btn");
+      const themeCloseBtn = document.getElementById("theme-close-btn");
+      const themeOptionsGrid = document.getElementById("theme-options-grid");
+
+      const resetModal = document.getElementById("reset-modal");
+      const resetConfirmBtn = document.getElementById("reset-confirm-btn");
+      const resetCancelBtn = document.getElementById("reset-cancel-btn");
+
+      const configModal = document.getElementById("config-modal");
+      const configOpenBtn = document.getElementById("config-open-btn");
+      const configCloseBtn = document.getElementById("config-close-btn");
+      const configApplyBtn = document.getElementById("config-apply-btn");
+      const rowsInput = document.getElementById("rows-input");
+      const colsInput = document.getElementById("cols-input");
+      const editorCellGrid = document.getElementById("editor-cell-grid");
+
+      const namesModal = document.getElementById("names-modal");
+      const namesOpenBtn = document.getElementById("names-open-btn");
+      const namesCloseBtn = document.getElementById("names-close-btn");
+      const namesApplyBtn = document.getElementById("names-apply-btn");
+      const namesInputGrid = document.getElementById("names-input-grid");
+      const totalStudentsInput = document.getElementById("total-students-input");
+      const bulkNamesTextarea = document.getElementById("bulk-names-textarea");
+      const bulkApplyBtn = document.getElementById("bulk-apply-btn");
+      const bulkClearBtn = document.getElementById("bulk-clear-btn");
+      const namesFileInput = document.getElementById("names-file-input");
+      const namesClearAllBtn = document.getElementById("names-clear-all-btn");
+
+      // Web Audio Synthesizer sound effects
+      let audioCtx = null;
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
+
+      function playTickSound() {
+        try {
+          initAudio();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(400 + Math.random() * 200, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.05);
+        } catch (e) {}
+      }
+
+      function playFanfareSound() {
+        try {
+          initAudio();
+          const now = audioCtx.currentTime;
+          const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
+          notes.forEach((freq, index) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + index * 0.08);
+            gain.gain.setValueAtTime(0.2, now + index * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.08 + 0.4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + index * 0.08);
+            osc.stop(now + index * 0.08 + 0.4);
+          });
+        } catch (e) {}
+      }
+
+      function createGrandFanfare(targetX, targetY) {
+        if (!targetX || !targetY) {
+          targetX = window.innerWidth / 2;
+          targetY = window.innerHeight / 2;
+        }
+
+        const colors = ['#ff4081', '#ffd54f', '#81c784', '#00e5ff', '#ba68c8', '#ff9100', '#76ff03', '#e91e63'];
+        const emojis = ['🍀', '🎉', '✨', '🎈', '🥳', '👑', '💖', '🎁', '⭐️', '🌸'];
+
+        for (let s = 0; s < 3; s++) {
+          setTimeout(() => {
+            const aura = document.createElement('div');
+            aura.className = 'fixed pointer-events-none z-[100] rounded-full border-4 border-amber-300 shadow-[0_0_40px_rgba(255,215,0,0.9)]';
+            aura.style.left = `${targetX}px`;
+            aura.style.top = `${targetY}px`;
+            aura.style.transform = 'translate(-50%, -50%)';
+            document.body.appendChild(aura);
+
+            aura.animate([
+              { width: '10px', height: '10px', opacity: 1, borderWidth: '10px' },
+              { width: `${240 + s * 60}px`, height: `${240 + s * 60}px`, opacity: 0, borderWidth: '1px' }
+            ], {
+              duration: 800 + s * 120,
+              easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)',
+              fill: 'forwards'
+            }).onfinish = () => aura.remove();
+          }, s * 100);
+        }
+
+        for (let i = 0; i < 80; i++) {
+          const el = document.createElement('div');
+          el.className = 'fixed pointer-events-none z-[100] select-none font-bold';
+
+          if (Math.random() < 0.4) {
+            el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.fontSize = `${18 + Math.random() * 22}px`;
+          } else {
+            const size = 8 + Math.random() * 12;
+            el.style.width = `${size}px`;
+            el.style.height = `${size * (Math.random() < 0.5 ? 1 : 2.5)}px`;
+            el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            el.style.borderRadius = Math.random() < 0.5 ? '50%' : '2px';
+          }
+
+          el.style.left = `${targetX}px`;
+          el.style.top = `${targetY}px`;
+          document.body.appendChild(el);
+
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 100 + Math.random() * 280;
+          const tx = Math.cos(angle) * speed;
+          const ty = Math.sin(angle) * speed - 40;
+          const rot = (Math.random() - 0.5) * 1000;
+
+          el.animate([
+            { transform: 'translate(-50%, -50%) scale(0.2) rotate(0deg)', opacity: 1 },
+            { transform: `translate(calc(-50% + ${tx * 0.6}px), calc(-50% + ${ty * 0.7}px)) scale(1.3) rotate(${rot * 0.5}deg)`, opacity: 1, offset: 0.5 },
+            { transform: `translate(calc(-50% + ${tx * 1.1}px), calc(-50% + ${ty + 140}px)) scale(0.2) rotate(${rot}deg)`, opacity: 0 }
+          ], {
+            duration: 900 + Math.random() * 700,
+            easing: 'cubic-bezier(0.12, 0.8, 0.32, 1)',
+            fill: 'forwards'
+          }).onfinish = () => el.remove();
+        }
+      }
+
+      function renderThemeOptions() {
+        themeOptionsGrid.innerHTML = '';
+        themeData.forEach(t => {
+          const card = document.createElement('div');
+          card.className = `theme-card ${currentThemeId === t.id ? 'active' : ''}`;
+          card.dataset.themeId = t.id;
+          card.innerHTML = `
+            <div class="flex items-center justify-between text-sm font-extrabold text-slate-800 tracking-tight">
+              <span>${t.name}</span>
+            </div>
+            <div class="theme-card-preview" style="background: ${t.bg}; border: 1.5px solid ${t.bar};">
+              <div class="w-14 h-3.5 rounded-md" style="background: ${t.btn};"></div>
+            </div>
+            <div class="theme-card-check">✓</div>
+          `;
+          card.addEventListener('click', () => {
+            currentThemeId = t.id;
+            document.documentElement.setAttribute('data-theme', t.id);
+            renderThemeOptions();
+            saveStateToCloud();
+          });
+          themeOptionsGrid.appendChild(card);
+        });
+      }
+
+      function renderNumberGrid() {
+        numberGridEl.innerHTML = '';
+        for (let i = 1; i <= totalStudents; i++) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'student-num-btn';
+          btn.textContent = i;
+          btn.dataset.num = i;
+
+          const isAssigned = Object.values(assignedMap).some(item => item.num === i);
+          if (isAssigned) {
+            btn.classList.add('is-assigned');
+            btn.disabled = true;
+          } else if (selectedStudentNum === i) {
+            btn.classList.add('is-selected');
+          }
+
+          btn.addEventListener('click', () => {
+            if (isAssigned) return;
+            if (selectedStudentNum === i) {
+              selectedStudentNum = null;
+            } else {
+              selectedStudentNum = i;
+            }
+            updateNumberGridState();
+            updateStatusText();
+          });
+
+          numberGridEl.appendChild(btn);
+        }
+        updateStatusText();
+      }
+
+      function updateNumberGridState() {
+        const btns = numberGridEl.querySelectorAll('.student-num-btn');
+        btns.forEach(btn => {
+          const num = parseInt(btn.dataset.num);
+          const isAssigned = Object.values(assignedMap).some(item => item.num === num);
+          btn.classList.remove('is-selected', 'is-assigned');
+          btn.disabled = false;
+          if (isAssigned) {
+            btn.classList.add('is-assigned');
+            btn.disabled = true;
+          } else if (selectedStudentNum === num) {
+            btn.classList.add('is-selected');
+          }
+        });
+      }
+
+      function updateStatusText() {
+        const assignedCount = Object.keys(assignedMap).length;
+        if (selectedStudentNum !== null) {
+          const name = studentNames[selectedStudentNum - 1] || `${selectedStudentNum}번`;
+          statusTextEl.innerHTML = `<span class="font-bold text-amber-800">${selectedStudentNum}번 (${name})</span> 선택 중! '행운 뽑기'를 눌러주세요.`;
+          luckyBtn.disabled = false;
+        } else if (assignedCount >= totalStudents) {
+          statusTextEl.textContent = '🎉 모든 학생의 자리가 배치되었습니다!';
+          luckyBtn.disabled = true;
+        } else {
+          statusTextEl.textContent = `번호를 선택해 주세요. (남은 인원: ${totalStudents - assignedCount}명)`;
+          luckyBtn.disabled = true;
+        }
+      }
+
+      function renderSeatGrid() {
+        seatGridWrapEl.style.gridTemplateRows = `repeat(${configRows}, minmax(0, 1fr))`;
+        seatGridWrapEl.style.gridTemplateColumns = `repeat(${configCols}, minmax(0, 1fr))`;
+        seatGridWrapEl.innerHTML = '';
+
+        for (let r = 0; r < configRows; r++) {
+          for (let c = 0; c < configCols; c++) {
+            let actualR = r;
+            let actualC = c;
+
+            if (viewPerspective === 'teacher') {
+              actualR = configRows - 1 - r;
+              actualC = configCols - 1 - c;
+            }
+
+            const cellType = gridMatrix[actualR][actualC];
+            const key = `${actualR}_${actualC}`;
+
+            const tile = document.createElement('div');
+            tile.className = 'seat-tile';
+            tile.dataset.key = key;
+
+            if (cellType === 'empty') {
+              tile.classList.add('is-empty');
+            } else {
+              const assigned = assignedMap[key];
+
+              if (assigned) {
+                tile.classList.add('is-assigned');
+                if (lastAssignedKey === key) {
+                  tile.classList.add('just-assigned');
+                }
+                tile.innerHTML = `
+                  <div class="seat-num-badge">${assigned.num}번</div>
+                  <div class="seat-student-name">${assigned.name}</div>
+                `;
+                tile.style.cursor = 'pointer';
+                tile.title = '클릭하여 자리 배정 취소';
+                tile.addEventListener('click', () => {
+                  delete assignedMap[key];
+                  lastAssignedKey = null;
+                  renderSeatGrid();
+                  renderNumberGrid();
+                  saveStateToCloud();
+                });
+              } else {
+                tile.innerHTML = `
+                  <div class="seat-heart-icon">💛</div>
+                `;
+              }
+            }
+
+            seatGridWrapEl.appendChild(tile);
+          }
+        }
+
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+      }
+
+      viewToggleBtn.addEventListener('click', () => {
+        if (viewPerspective === 'student') {
+          viewPerspective = 'teacher';
+          viewModeLabel.textContent = '관점: 교사';
+          teacherPodiumEl.className = 'teacher-podium pos-bottom';
+        } else {
+          viewPerspective = 'student';
+          viewModeLabel.textContent = '관점: 학생';
+          teacherPodiumEl.className = 'teacher-podium pos-top';
+        }
+        renderSeatGrid();
+      });
+
+      luckyBtn.addEventListener('click', async () => {
+        if (isDrawing || selectedStudentNum === null) return;
+
+        const availableKeys = [];
+        for (let r = 0; r < configRows; r++) {
+          for (let c = 0; c < configCols; c++) {
+            if (gridMatrix[r][c] === 'seat') {
+              const key = `${r}_${c}`;
+              if (!assignedMap[key]) availableKeys.push(key);
+            }
+          }
+        }
+
+        if (availableKeys.length === 0) {
+          statusTextEl.textContent = '⚠️ 더 이상 남아있는 빈 좌석이 없습니다!';
+          return;
+        }
+
+        isDrawing = true;
+        luckyBtn.disabled = true;
+        autoBtn.disabled = true;
+
+        const currentNum = selectedStudentNum;
+        const currentName = studentNames[currentNum - 1] || `${currentNum}번`;
+
+        const delays = [35, 35, 45, 45, 55, 65, 80, 100, 130, 170, 220, 280, 360, 480];
+        let currentHighlightKey = null;
+
+        for (let i = 0; i < delays.length; i++) {
+          if (currentHighlightKey) {
+            const prevEl = seatGridWrapEl.querySelector(`[data-key="${currentHighlightKey}"]`);
+            if (prevEl) prevEl.classList.remove('is-roulette');
+          }
+
+          const randomKey = availableKeys[Math.floor(Math.random() * availableKeys.length)];
+          currentHighlightKey = randomKey;
+
+          const targetEl = seatGridWrapEl.querySelector(`[data-key="${randomKey}"]`);
+          if (targetEl) targetEl.classList.add('is-roulette');
+
+          playTickSound();
+          await new Promise(res => setTimeout(res, delays[i]));
+        }
+
+        if (currentHighlightKey) {
+          const prevEl = seatGridWrapEl.querySelector(`[data-key="${currentHighlightKey}"]`);
+          if (prevEl) prevEl.classList.remove('is-roulette');
+        }
+
+        const chosenKey = currentHighlightKey;
+        assignedMap[chosenKey] = { num: currentNum, name: currentName };
+        lastAssignedKey = chosenKey;
+
+        selectedStudentNum = null;
+        renderSeatGrid();
+        renderNumberGrid();
+        saveStateToCloud();
+
+        const finalTileEl = seatGridWrapEl.querySelector(`[data-key="${chosenKey}"]`);
+        if (finalTileEl) {
+          const rect = finalTileEl.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          playFanfareSound();
+          createGrandFanfare(centerX, centerY);
+        }
+
+        isDrawing = false;
+        autoBtn.disabled = false;
+      });
+
+      autoBtn.addEventListener('click', async () => {
+        if (isDrawing) return;
+
+        const unassignedNums = [];
+        for (let i = 1; i <= totalStudents; i++) {
+          if (!Object.values(assignedMap).some(item => item.num === i)) {
+            unassignedNums.push(i);
+          }
+        }
+
+        if (unassignedNums.length === 0) {
+          statusTextEl.textContent = '모든 학생이 이미 자리에 배정되었습니다!';
+          return;
+        }
+
+        for (const num of unassignedNums) {
+          selectedStudentNum = num;
+          updateNumberGridState();
+          updateStatusText();
+
+          luckyBtn.click();
+
+          while (isDrawing) {
+            await new Promise(r => setTimeout(r, 80));
+          }
+          await new Promise(r => setTimeout(r, 250));
+        }
+      });
+
+      function renderEditorCellGrid() {
+        editorCellGrid.style.gridTemplateRows = `repeat(${configRows}, minmax(0, 1fr))`;
+        editorCellGrid.style.gridTemplateColumns = `repeat(${configCols}, minmax(0, 1fr))`;
+        editorCellGrid.innerHTML = '';
+
+        for (let r = 0; r < configRows; r++) {
+          for (let c = 0; c < configCols; c++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            const cellType = gridMatrix[r][c];
+            btn.className = `editor-cell-btn ${cellType === 'seat' ? 'is-seat' : 'is-empty'}`;
+            btn.textContent = cellType === 'seat' ? '좌석' : '빈자리';
+
+            btn.addEventListener('click', () => {
+              gridMatrix[r][c] = gridMatrix[r][c] === 'seat' ? 'empty' : 'seat';
+              renderEditorCellGrid();
+            });
+
+            editorCellGrid.appendChild(btn);
+          }
+        }
+      }
+
+      function updateGridDimensions(newRows, newCols) {
+        const newMatrix = [];
+        for (let r = 0; r < newRows; r++) {
+          const rowArr = [];
+          for (let c = 0; c < newCols; c++) {
+            if (gridMatrix[r] && gridMatrix[r][c]) {
+              rowArr.push(gridMatrix[r][c]);
+            } else {
+              rowArr.push('seat');
+            }
+          }
+          newMatrix.push(rowArr);
+        }
+        configRows = newRows;
+        configCols = newCols;
+        gridMatrix = newMatrix;
+        renderEditorCellGrid();
+      }
+
+      rowsInput.addEventListener('change', () => {
+        const r = Math.max(1, Math.min(10, parseInt(rowsInput.value) || 5));
+        const c = Math.max(1, Math.min(10, parseInt(colsInput.value) || 5));
+        updateGridDimensions(r, c);
+      });
+
+      colsInput.addEventListener('change', () => {
+        const r = Math.max(1, Math.min(10, parseInt(rowsInput.value) || 5));
+        const c = Math.max(1, Math.min(10, parseInt(colsInput.value) || 5));
+        updateGridDimensions(r, c);
+      });
+
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const preset = btn.dataset.preset;
+          if (preset === '1col') {
+            rowsInput.value = 5;
+            colsInput.value = 5;
+            configRows = 5;
+            configCols = 5;
+            gridMatrix = Array.from({ length: 5 }, () => Array(5).fill('seat'));
+          } else if (preset === '2pair') {
+            rowsInput.value = 4;
+            colsInput.value = 6;
+            configRows = 4;
+            configCols = 6;
+            gridMatrix = [
+              ['seat', 'seat', 'empty', 'seat', 'seat', 'empty'],
+              ['seat', 'seat', 'empty', 'seat', 'seat', 'empty'],
+              ['seat', 'seat', 'empty', 'seat', 'seat', 'empty'],
+              ['seat', 'seat', 'empty', 'seat', 'seat', 'empty']
+            ];
+          } else if (preset === 'group') {
+            rowsInput.value = 4;
+            colsInput.value = 6;
+            configRows = 4;
+            configCols = 6;
+            gridMatrix = [
+              ['seat', 'seat', 'seat', 'seat', 'seat', 'seat'],
+              ['seat', 'seat', 'seat', 'seat', 'seat', 'seat'],
+              ['empty', 'empty', 'empty', 'empty', 'empty', 'empty'],
+              ['seat', 'seat', 'seat', 'seat', 'seat', 'seat']
+            ];
+          }
+          renderEditorCellGrid();
+        });
+      });
+
+      configApplyBtn.addEventListener('click', () => {
+        assignedMap = {};
+        lastAssignedKey = null;
+        renderSeatGrid();
+        renderNumberGrid();
+        saveStateToCloud();
+        configModal.classList.remove('open');
+      });
+
+      // Student Names Modal Logic
+      function renderNamesInputGrid() {
+        namesInputGrid.innerHTML = '';
+        for (let i = 1; i <= totalStudents; i++) {
+          const div = document.createElement('div');
+          div.className = 'flex items-center gap-2 bg-slate-50 border rounded-lg px-2 py-1.5 text-xs shadow-sm';
+          div.innerHTML = `
+            <span class="w-8 text-center font-bold text-slate-600 shrink-0 text-sm">${i}번</span>
+            <input type="text" data-idx="${i - 1}" value="${studentNames[i - 1] || ''}" placeholder="${i}번 이름" class="name-input-item w-full border rounded-md px-2 py-1 text-xs font-bold text-slate-800 focus:outline-none focus:border-emerald-500 bg-white">
+          `;
+          namesInputGrid.appendChild(div);
+        }
+      }
+
+      totalStudentsInput.addEventListener('change', () => {
+        const val = parseInt(totalStudentsInput.value) || 22;
+        totalStudents = Math.max(1, Math.min(50, val));
+        totalStudentsInput.value = totalStudents;
+        while (studentNames.length < totalStudents) {
+          studentNames.push(`${studentNames.length + 1}번`);
+        }
+        renderNamesInputGrid();
+      });
+
+      bulkApplyBtn.addEventListener('click', () => {
+        const text = bulkNamesTextarea.value.trim();
+        if (!text) return;
+        const parsed = text.split(/[\n,,\s]+/).map(s => s.trim()).filter(Boolean);
+        if (parsed.length > 0) {
+          totalStudents = parsed.length;
+          totalStudentsInput.value = totalStudents;
+          studentNames = parsed;
+          renderNamesInputGrid();
+        }
+      });
+
+      bulkClearBtn.addEventListener('click', () => {
+        bulkNamesTextarea.value = '';
+      });
+
+      namesClearAllBtn.addEventListener('click', () => {
+        studentNames = Array.from({ length: totalStudents }, (_, i) => `${i + 1}번`);
+        renderNamesInputGrid();
+      });
+
+      namesFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          bulkNamesTextarea.value = evt.target.result;
+          bulkApplyBtn.click();
+        };
+        reader.readAsText(file);
+      });
+
+      namesApplyBtn.addEventListener('click', () => {
+        const inputs = namesInputGrid.querySelectorAll('.name-input-item');
+        inputs.forEach(input => {
+          const idx = parseInt(input.dataset.idx);
+          const val = input.value.trim();
+          if (val) studentNames[idx] = val;
+        });
+        assignedMap = {};
+        selectedStudentNum = null;
+        lastAssignedKey = null;
+        renderNumberGrid();
+        renderSeatGrid();
+        saveStateToCloud();
+        namesModal.classList.remove('open');
+      });
+
+      // Modal Triggers
+      themeOpenBtn.addEventListener('click', () => {
+        renderThemeOptions();
+        themeModal.classList.add('open');
+      });
+      themeCloseBtn.addEventListener('click', () => themeModal.classList.remove('open'));
+
+      resetBtn.addEventListener('click', () => resetModal.classList.add('open'));
+      resetCancelBtn.addEventListener('click', () => resetModal.classList.remove('open'));
+      resetConfirmBtn.addEventListener('click', () => {
+        assignedMap = {};
+        selectedStudentNum = null;
+        lastAssignedKey = null;
+        renderNumberGrid();
+        renderSeatGrid();
+        saveStateToCloud();
+        resetModal.classList.remove('open');
+      });
+
+      configOpenBtn.addEventListener('click', () => {
+        rowsInput.value = configRows;
+        colsInput.value = configCols;
+        renderEditorCellGrid();
+        configModal.classList.add('open');
+      });
+      configCloseBtn.addEventListener('click', () => configModal.classList.remove('open'));
+
+      namesOpenBtn.addEventListener('click', () => {
+        totalStudentsInput.value = totalStudents;
+        renderNamesInputGrid();
+        namesModal.classList.add('open');
+      });
+      namesCloseBtn.addEventListener('click', () => namesModal.classList.remove('open'));
+
+      printBtn.addEventListener('click', () => {
+        window.print();
+      });
+
+      // Initial Launch
+      renderThemeOptions();
+      renderNumberGrid();
+      renderSeatGrid();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener("DOMContentLoaded", initApp);
+    } else {
+      initApp();
+    }
+  </script>
+</body>
+</html>
