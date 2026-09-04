@@ -559,6 +559,62 @@
       color: #9f1239 !important;
     }
 
+    .auto-speed-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      border: 1.5px solid #fcd34d;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.72);
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .auto-speed-label {
+      flex-shrink: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.68rem, 1.2vh, 0.78rem);
+      font-weight: 700;
+      color: #92400e;
+      white-space: nowrap;
+    }
+
+    .auto-speed-group {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 3px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .auto-speed-toggle {
+      min-width: 0;
+      padding: 3px 3px;
+      border: 1.5px solid #fcd34d;
+      border-radius: 7px;
+      background: #ffffff;
+      color: #92400e;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(0.66rem, 1.12vh, 0.76rem);
+      font-weight: 700;
+      line-height: 1.15;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .auto-speed-toggle:hover {
+      transform: translateY(-1px);
+      background: #fffbeb;
+    }
+
+    .auto-speed-toggle.is-active {
+      background: #fef3c7;
+      border-color: #f59e0b;
+      color: #92400e;
+      box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.18);
+    }
+
     .seat-tile.is-empty {
       background: rgba(0,0,0,0.02);
       border: 2px dashed #d1d5db;
@@ -951,13 +1007,13 @@
           <button id="auto-btn" class="toolbar-btn col-span-2 !py-1 !bg-amber-50 hover:!bg-amber-100 !border-amber-300 !text-amber-900" type="button">
             <span id="auto-btn-text">✨ 전체 자동 추첨</span>
           </button>
-          <div class="col-span-2 flex items-center justify-center gap-2 px-2 py-1 rounded-lg bg-white/70 border border-amber-200 font-sans">
-            <label for="auto-speed-select" class="text-[11px] font-bold text-amber-900 whitespace-nowrap">⏱ 자동 속도</label>
-            <select id="auto-speed-select" class="flex-1 max-w-[160px] text-[11px] font-bold text-slate-700 bg-white border border-amber-300 rounded-md px-2 py-1 outline-none cursor-pointer">
-              <option value="normal">보통</option>
-              <option value="fast">빠르게</option>
-              <option value="turbo">매우 빠르게</option>
-            </select>
+          <div class="col-span-2 auto-speed-wrap">
+            <div class="auto-speed-label">⏱ 자동 속도</div>
+            <div class="auto-speed-group" role="group" aria-label="자동 추첨 속도">
+              <button type="button" class="auto-speed-toggle is-active" data-speed="normal">보통</button>
+              <button type="button" class="auto-speed-toggle" data-speed="fast">빠르게</button>
+              <button type="button" class="auto-speed-toggle" data-speed="turbo">매우 빠르게</button>
+            </div>
           </div>
         </div>
 
@@ -1416,7 +1472,7 @@
       const luckyBtn = document.getElementById("lucky-btn");
       const autoBtn = document.getElementById("auto-btn");
       const autoBtnText = document.getElementById("auto-btn-text");
-      const autoSpeedSelect = document.getElementById("auto-speed-select");
+      const autoSpeedButtons = Array.from(document.querySelectorAll(".auto-speed-toggle"));
       const resetBtn = document.getElementById("reset-btn");
       const printBtn = document.getElementById("print-btn");
       const statusTextEl = document.getElementById("status-text");
@@ -1732,19 +1788,31 @@
       };
 
       // 자동 추첨 속도는 이 브라우저에 기억합니다.
-      const savedAutoSpeed = localStorage.getItem('lucky_seat_auto_speed');
-      if (savedAutoSpeed && AUTO_SPEED_SETTINGS[savedAutoSpeed] && autoSpeedSelect) {
-        autoSpeedSelect.value = savedAutoSpeed;
-      }
-      if (autoSpeedSelect) {
-        autoSpeedSelect.addEventListener('change', () => {
-          localStorage.setItem('lucky_seat_auto_speed', autoSpeedSelect.value);
+      let currentAutoSpeed = localStorage.getItem('lucky_seat_auto_speed') || 'normal';
+      if (!AUTO_SPEED_SETTINGS[currentAutoSpeed]) currentAutoSpeed = 'normal';
+
+      function renderAutoSpeedButtons() {
+        autoSpeedButtons.forEach((btn) => {
+          const active = btn.dataset.speed === currentAutoSpeed;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
         });
       }
 
+      autoSpeedButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const speed = btn.dataset.speed;
+          if (!AUTO_SPEED_SETTINGS[speed]) return;
+          currentAutoSpeed = speed;
+          localStorage.setItem('lucky_seat_auto_speed', currentAutoSpeed);
+          renderAutoSpeedButtons();
+        });
+      });
+
+      renderAutoSpeedButtons();
+
       function getAutoSpeedSetting() {
-        const key = autoSpeedSelect?.value || 'normal';
-        return AUTO_SPEED_SETTINGS[key] || AUTO_SPEED_SETTINGS.normal;
+        return AUTO_SPEED_SETTINGS[currentAutoSpeed] || AUTO_SPEED_SETTINGS.normal;
       }
 
       function updateAutoButtonUI(state = 'idle') {
