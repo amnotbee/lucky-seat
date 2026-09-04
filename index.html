@@ -1020,14 +1020,14 @@
 
     // Firebase Setup
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'lucky-seat-picker';
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-      apiKey: "AIzaSyDummyKeyForStandaloneMode",
-      authDomain: "lucky-seat-picker.firebaseapp.com",
-      projectId: "lucky-seat-picker",
-      storageBucket: "lucky-seat-picker.appspot.com",
-      messagingSenderId: "123456789",
-      appId: "1:123456789:web:abcdef"
-    };
+    const firebaseConfig = {
+  apiKey: "AIzaSyD-39oRQu8J4Yo7SJSK0m1uXT_vcdRNJWxc",
+  authDomain: "lucky-seat.firebaseapp.com",
+  projectId: "lucky-seat",
+  storageBucket: "lucky-seat.firebasestorage.app",
+  messagingSenderId: "100184024236",
+  appId: "1:100184024236:web:8da81efb11c8f05151ab09"
+};
 
     let db = null;
     let auth = null;
