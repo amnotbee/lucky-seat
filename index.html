@@ -1061,9 +1061,8 @@
           <button id="account-open-btn" class="toolbar-btn !py-1 !bg-sky-50 hover:!bg-sky-100 !border-sky-300 !text-sky-800 min-w-0" type="button">
             <span id="account-status-text" class="min-w-0 overflow-hidden text-ellipsis">🧸 내 계정</span>
           </button>
-          <button id="help-open-btn" class="toolbar-btn !py-1 !bg-emerald-50 hover:!bg-emerald-100 !border-emerald-300 !text-emerald-800" type="button">
-            <i data-lucide="circle-help" class="w-3.5 h-3.5 shrink-0"></i>
-            <span>사용 방법</span>
+          <button id="help-open-btn" class="toolbar-btn !py-1 !bg-emerald-50 hover:!bg-emerald-100 !border-emerald-300 !text-emerald-800 !justify-center !text-center" type="button">
+            <span class="w-full text-center">❓ 사용 방법</span>
           </button>
           <button id="auto-btn" class="toolbar-btn col-span-2 !py-1 !bg-amber-50 hover:!bg-amber-100 !border-amber-300 !text-amber-900" type="button">
             <span id="auto-btn-text">✨ 전체 자동 추첨</span>
@@ -1109,11 +1108,8 @@
       </aside>
 
       <section class="panel-card seat-panel">
-        <div class="panel-header flex items-center justify-between">
-          <div>
-            <h2 class="panel-title text-left">🌸 <span class="dynamic-month">9월</span> 좌석 배치표</h2>
-            <p class="panel-desc text-left text-xs text-slate-500">행운 뽑기를 누르면 좌석 상단에 번호, 중앙에 이름이 표시됩니다.</p>
-          </div>
+        <div class="panel-header">
+          <h2 class="panel-title text-center">오늘 선정된 자리가 너에게 행운을 가져다줄 거야! ✨</h2>
         </div>
 
         <div id="seat-map-container" class="seat-map-container">
@@ -1274,7 +1270,7 @@
     <div class="modal-box !max-w-lg p-5 text-slate-800">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="text-lg font-extrabold flex items-center gap-2 text-emerald-800">
-          <span>🍀</span> 행운의 자리 사용 방법
+          <span>❓</span> 행운의 자리 사용 방법
         </h3>
         <button id="help-close-btn" class="text-slate-400 hover:text-slate-700 p-1" type="button">
           <i data-lucide="x" class="w-6 h-6"></i>
@@ -1291,10 +1287,19 @@
         <div class="mt-3 text-xs font-bold text-sky-700">
           같은 Google 계정으로 로그인하면 여러 기기에서 명단과 배정 결과가 실시간으로 연동됩니다.
         </div>
+
+        <div class="mt-3 pt-3 border-t border-emerald-200">
+          <div class="font-extrabold text-emerald-900 mb-1">📲 앱처럼 설치해서 사용하기</div>
+          <div class="text-xs leading-relaxed text-slate-600">
+            Chrome/Edge에서는 주소창의 설치 아이콘 또는 브라우저 메뉴의 <b>앱 설치</b>를 선택하면
+            바탕화면·시작 메뉴에서 독립된 앱처럼 실행할 수 있습니다.
+            설치는 선택 사항이며, 링크로 바로 사용해도 됩니다.
+          </div>
+        </div>
       </div>
 
       <button id="tutorial-start-btn" type="button" class="btn-draw !py-2.5 !text-sm">
-        ▶ 화면 보면서 튜토리얼 시작
+        ▶ 화면 보면서 전체 튜토리얼 시작
       </button>
 
       <div class="grid grid-cols-2 gap-2 pt-1">
@@ -1797,6 +1802,11 @@
           target: '#print-btn',
           title: '배치표 인쇄',
           desc: '인쇄 제목을 직접 입력한 뒤 A4 가로 형식으로 좌석표를 출력합니다.'
+        },
+        {
+          target: '#help-open-btn',
+          title: '앱 설치',
+          desc: 'Chrome/Edge에서는 주소창의 설치 아이콘 또는 브라우저 메뉴의 앱 설치를 선택하면 바탕화면·시작 메뉴에서 독립된 앱처럼 실행할 수 있습니다. 설치하지 않아도 링크로 바로 사용할 수 있습니다.'
         }
       ];
 

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lucky-seat-pwa-v1';
+const CACHE_NAME = 'lucky-seat-pwa-v4';
 const APP_SHELL = [
   './',
   './index.html',
