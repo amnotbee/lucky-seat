@@ -812,6 +812,47 @@
       color: #9e9e9e;
     }
 
+
+    /* Help / Tutorial */
+    .tutorial-focus-ring {
+      position: fixed;
+      z-index: 1000;
+      border: 4px solid #22c55e;
+      border-radius: 14px;
+      box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.58), 0 0 28px rgba(34, 197, 94, 0.7);
+      pointer-events: none;
+      transition: all 0.22s ease;
+    }
+
+    .tutorial-card {
+      position: fixed;
+      z-index: 1001;
+      width: min(360px, calc(100vw - 24px));
+      background: #ffffff;
+      border: 3px solid #bbf7d0;
+      border-radius: 18px;
+      box-shadow: 0 16px 45px rgba(15, 23, 42, 0.25);
+      padding: 16px;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+
+    .tutorial-step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: #16a34a;
+      color: white;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    #print-title-display {
+      display: none;
+    }
+
     /* Print styling support */
     @page {
       size: A4 landscape;
@@ -838,8 +879,19 @@
       .top-toolbar-box,
       .action-btn-group,
       .modal-overlay,
-      .sub-title span {
+      .app-header {
         display: none !important;
+      }
+
+      #print-title-display {
+        display: block !important;
+        margin: 0 0 7mm 0 !important;
+        text-align: center !important;
+        font-family: 'Noto Sans KR', sans-serif !important;
+        font-size: 24pt !important;
+        font-weight: 900 !important;
+        color: #111827 !important;
+        line-height: 1.2 !important;
       }
 
       .board-container {
@@ -886,15 +938,7 @@
       }
 
       .seat-panel .panel-header {
-        margin-bottom: 4mm !important;
-      }
-
-      .seat-panel .panel-title {
-        font-size: 16pt !important;
-      }
-
-      .seat-panel .panel-desc {
-        font-size: 8.5pt !important;
+        display: none !important;
       }
 
       .seat-map-container {
@@ -991,6 +1035,8 @@
       </p>
     </header>
 
+    <h1 id="print-title-display"></h1>
+
     <div class="content-layout">
 
       <aside class="panel-card draw-panel">
@@ -1012,13 +1058,17 @@
             <i data-lucide="users" class="w-3.5 h-3.5 shrink-0"></i>
             <span>명단 수정</span>
           </button>
-          <button id="account-open-btn" class="toolbar-btn col-span-2 !py-1 !bg-sky-50 hover:!bg-sky-100 !border-sky-300 !text-sky-800" type="button">
-            <span id="account-status-text">🧸 내 계정</span>
+          <button id="account-open-btn" class="toolbar-btn !py-1 !bg-sky-50 hover:!bg-sky-100 !border-sky-300 !text-sky-800 min-w-0" type="button">
+            <span id="account-status-text" class="min-w-0 overflow-hidden text-ellipsis">🧸 내 계정</span>
+          </button>
+          <button id="help-open-btn" class="toolbar-btn !py-1 !bg-emerald-50 hover:!bg-emerald-100 !border-emerald-300 !text-emerald-800" type="button">
+            <i data-lucide="circle-help" class="w-3.5 h-3.5 shrink-0"></i>
+            <span>사용 방법</span>
           </button>
           <button id="auto-btn" class="toolbar-btn col-span-2 !py-1 !bg-amber-50 hover:!bg-amber-100 !border-amber-300 !text-amber-900" type="button">
             <span id="auto-btn-text">✨ 전체 자동 추첨</span>
           </button>
-          <div class="col-span-2 auto-speed-wrap">
+          <div id="auto-speed-wrap" class="col-span-2 auto-speed-wrap">
             <div class="auto-speed-label">⏱ 자동 속도</div>
             <div class="auto-speed-group" role="group" aria-label="자동 추첨 속도">
               <button type="button" class="auto-speed-toggle is-active" data-speed="normal">보통</button>
@@ -1066,7 +1116,7 @@
           </div>
         </div>
 
-        <div class="seat-map-container">
+        <div id="seat-map-container" class="seat-map-container">
           <div id="teacher-podium" class="teacher-podium pos-top">
             🏫 교탁 (칠판 / 선생님 위치)
           </div>
@@ -1214,6 +1264,98 @@
 
       <div class="flex justify-end gap-2 pt-3 border-t">
         <button id="names-apply-btn" class="btn-draw !w-auto px-6 !py-2.5 !text-sm">명단 저장하기</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Help Modal -->
+  <div id="help-modal" class="modal-overlay">
+    <div class="modal-box !max-w-lg p-5 text-slate-800">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-extrabold flex items-center gap-2 text-emerald-800">
+          <span>🍀</span> 행운의 자리 사용 방법
+        </h3>
+        <button id="help-close-btn" class="text-slate-400 hover:text-slate-700 p-1" type="button">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-sm leading-relaxed">
+        <div class="font-extrabold text-emerald-900 mb-2">처음 사용하신다면</div>
+        <ol class="list-decimal pl-5 space-y-1 text-slate-700">
+          <li>명단과 좌석 배열을 설정합니다.</li>
+          <li>학생이 번호를 선택해 <b>행운 뽑기</b>를 하거나 <b>전체 자동 추첨</b>을 사용합니다.</li>
+          <li>완성된 좌석표는 원하는 제목으로 A4 가로 인쇄할 수 있습니다.</li>
+        </ol>
+        <div class="mt-3 text-xs font-bold text-sky-700">
+          같은 Google 계정으로 로그인하면 여러 기기에서 명단과 배정 결과가 실시간으로 연동됩니다.
+        </div>
+      </div>
+
+      <button id="tutorial-start-btn" type="button" class="btn-draw !py-2.5 !text-sm">
+        ▶ 화면 보면서 튜토리얼 시작
+      </button>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button id="help-hide-today-btn" type="button" class="btn-secondary !py-2 !text-xs">
+          오늘은 보지 않기
+        </button>
+        <button id="help-hide-never-btn" type="button" class="btn-secondary !py-2 !text-xs !text-slate-600">
+          다시 보지 않기
+        </button>
+      </div>
+
+      <p class="text-[11px] text-slate-400 text-center">
+        '다시 보지 않기'를 선택해도 상단의 <b>사용 방법</b> 버튼으로 언제든 다시 열 수 있습니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- Print Title Modal -->
+  <div id="print-title-modal" class="modal-overlay">
+    <div class="modal-box !max-w-md p-5 text-slate-800">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-extrabold flex items-center gap-2 text-slate-800">
+          <span>🖨️</span> 배치표 인쇄 제목
+        </h3>
+        <button id="print-title-close-btn" class="text-slate-400 hover:text-slate-700 p-1" type="button">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <label class="text-xs font-extrabold text-slate-600" for="print-title-input">인쇄할 제목</label>
+      <input id="print-title-input" type="text"
+             class="w-full border-2 border-slate-300 rounded-xl px-3 py-2.5 text-sm font-bold focus:outline-none focus:border-emerald-500"
+             placeholder="예: 1학년 4반 9월 자리배치표">
+
+      <p class="text-xs text-slate-500 leading-relaxed">
+        원하는 문구를 자유롭게 입력할 수 있습니다.<br>
+        예: <b>1학년 4반 9월 자리배치표</b>
+      </p>
+
+      <div class="grid grid-cols-2 gap-2 pt-2">
+        <button id="print-title-cancel-btn" type="button" class="btn-secondary !py-2.5 !text-sm">취소</button>
+        <button id="print-title-confirm-btn" type="button" class="btn-draw !py-2.5 !text-sm">인쇄하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tutorial Overlay -->
+  <div id="tutorial-focus-ring" class="tutorial-focus-ring hidden"></div>
+  <div id="tutorial-card" class="tutorial-card hidden">
+    <div class="flex items-start gap-3">
+      <span id="tutorial-step-badge" class="tutorial-step-badge">1</span>
+      <div class="min-w-0 flex-1">
+        <div id="tutorial-step-title" class="text-base font-extrabold text-slate-800"></div>
+        <div id="tutorial-step-desc" class="mt-1 text-sm leading-relaxed text-slate-600"></div>
+      </div>
+    </div>
+    <div class="flex items-center justify-between gap-2 mt-4 pt-3 border-t">
+      <button id="tutorial-exit-btn" type="button" class="text-xs font-bold text-slate-500 hover:text-slate-800 px-2 py-1">종료</button>
+      <div class="flex gap-2">
+        <button id="tutorial-prev-btn" type="button" class="btn-secondary !py-1.5 !px-3 !text-xs">이전</button>
+        <button id="tutorial-next-btn" type="button" class="btn-draw !w-auto !py-1.5 !px-4 !text-xs">다음</button>
       </div>
     </div>
   </div>
@@ -1530,6 +1672,245 @@
       const excelTemplateDownloadBtn = document.getElementById("excel-template-download-btn");
       const namesFileInput = document.getElementById("names-file-input");
       const namesClearAllBtn = document.getElementById("names-clear-all-btn");
+      const helpOpenBtn = document.getElementById("help-open-btn");
+      const helpModal = document.getElementById("help-modal");
+      const helpCloseBtn = document.getElementById("help-close-btn");
+      const tutorialStartBtn = document.getElementById("tutorial-start-btn");
+      const helpHideTodayBtn = document.getElementById("help-hide-today-btn");
+      const helpHideNeverBtn = document.getElementById("help-hide-never-btn");
+
+      const printTitleModal = document.getElementById("print-title-modal");
+      const printTitleInput = document.getElementById("print-title-input");
+      const printTitleDisplay = document.getElementById("print-title-display");
+      const printTitleCloseBtn = document.getElementById("print-title-close-btn");
+      const printTitleCancelBtn = document.getElementById("print-title-cancel-btn");
+      const printTitleConfirmBtn = document.getElementById("print-title-confirm-btn");
+
+      const tutorialFocusRing = document.getElementById("tutorial-focus-ring");
+      const tutorialCard = document.getElementById("tutorial-card");
+      const tutorialStepBadge = document.getElementById("tutorial-step-badge");
+      const tutorialStepTitle = document.getElementById("tutorial-step-title");
+      const tutorialStepDesc = document.getElementById("tutorial-step-desc");
+      const tutorialPrevBtn = document.getElementById("tutorial-prev-btn");
+      const tutorialNextBtn = document.getElementById("tutorial-next-btn");
+      const tutorialExitBtn = document.getElementById("tutorial-exit-btn");
+
+
+      // ---------------- Help / Tutorial ----------------
+      const HELP_HIDE_TODAY_KEY = 'lucky_seat_help_hide_today';
+      const HELP_HIDE_NEVER_KEY = 'lucky_seat_help_hide_never';
+
+      function getLocalDateKey() {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      function openHelpModal() {
+        helpModal.classList.add('open');
+      }
+
+      function closeHelpModal() {
+        helpModal.classList.remove('open');
+      }
+
+      function maybeShowHelpOnLaunch() {
+        const hideNever = localStorage.getItem(HELP_HIDE_NEVER_KEY) === '1';
+        const hideToday = localStorage.getItem(HELP_HIDE_TODAY_KEY) === getLocalDateKey();
+        if (!hideNever && !hideToday) {
+          setTimeout(() => openHelpModal(), 450);
+        }
+      }
+
+      helpOpenBtn.addEventListener('click', openHelpModal);
+      helpCloseBtn.addEventListener('click', closeHelpModal);
+
+      helpHideTodayBtn.addEventListener('click', () => {
+        localStorage.setItem(HELP_HIDE_TODAY_KEY, getLocalDateKey());
+        closeHelpModal();
+      });
+
+      helpHideNeverBtn.addEventListener('click', () => {
+        localStorage.setItem(HELP_HIDE_NEVER_KEY, '1');
+        closeHelpModal();
+      });
+
+      const tutorialSteps = [
+        {
+          target: '#view-toggle-btn',
+          title: '관점 전환',
+          desc: '학생 관점과 교사 관점으로 좌석 배치 방향을 전환합니다.'
+        },
+        {
+          target: '#theme-open-btn',
+          title: '색상 테마',
+          desc: '원하는 테마를 선택하면 화면과 좌석표 색상이 함께 바뀝니다.'
+        },
+        {
+          target: '#config-open-btn',
+          title: '좌석 배열',
+          desc: '행·열 수와 빈자리를 설정해 실제 교실 구조에 맞출 수 있습니다.'
+        },
+        {
+          target: '#names-open-btn',
+          title: '명단 수정',
+          desc: '학생 수와 이름을 직접 입력하거나 엑셀 양식을 내려받아 불러올 수 있습니다.'
+        },
+        {
+          target: '#account-open-btn',
+          title: '내 계정',
+          desc: '현재 로그인한 Google 계정의 이름이 표시됩니다. 같은 계정으로 여러 기기에서 실시간 연동됩니다.'
+        },
+        {
+          target: '#auto-btn',
+          title: '전체 자동 추첨',
+          desc: '남아 있는 학생 전원의 자리를 자동으로 한 번에 배정합니다.'
+        },
+        {
+          target: '#auto-speed-wrap',
+          title: '자동 속도',
+          desc: '전체 자동 추첨 속도를 보통 / 빠르게 / 매우 빠르게 중에서 선택합니다.'
+        },
+        {
+          target: '#number-grid',
+          title: '번호 선택',
+          desc: '학생이 자신의 번호를 선택합니다. 이름이 비어 있는 결번은 자동으로 표시되지 않습니다.'
+        },
+        {
+          target: '#lucky-btn',
+          title: '행운 뽑기',
+          desc: '선택한 학생 한 명의 자리를 무작위로 추첨합니다.'
+        },
+        {
+          target: '#seat-map-container',
+          title: '좌석 배치표',
+          desc: '추첨된 번호와 이름이 좌석에 표시됩니다. 모든 배정이 끝나면 테마의 기본 색상으로 정리됩니다.'
+        },
+        {
+          target: '#reset-btn',
+          title: '좌석 초기화',
+          desc: '배정된 좌석을 모두 비우고 처음부터 다시 추첨할 수 있습니다.'
+        },
+        {
+          target: '#print-btn',
+          title: '배치표 인쇄',
+          desc: '인쇄 제목을 직접 입력한 뒤 A4 가로 형식으로 좌석표를 출력합니다.'
+        }
+      ];
+
+      let tutorialIndex = 0;
+
+      function positionTutorial() {
+        const step = tutorialSteps[tutorialIndex];
+        const target = document.querySelector(step.target);
+        if (!target) return;
+
+        const rect = target.getBoundingClientRect();
+        const pad = 6;
+
+        tutorialFocusRing.style.left = `${Math.max(4, rect.left - pad)}px`;
+        tutorialFocusRing.style.top = `${Math.max(4, rect.top - pad)}px`;
+        tutorialFocusRing.style.width = `${Math.min(window.innerWidth - 8, rect.width + pad * 2)}px`;
+        tutorialFocusRing.style.height = `${Math.min(window.innerHeight - 8, rect.height + pad * 2)}px`;
+
+        tutorialStepBadge.textContent = String(tutorialIndex + 1);
+        tutorialStepTitle.textContent = step.title;
+        tutorialStepDesc.textContent = step.desc;
+        tutorialPrevBtn.disabled = tutorialIndex === 0;
+        tutorialNextBtn.textContent = tutorialIndex === tutorialSteps.length - 1 ? '완료' : '다음';
+
+        const cardW = Math.min(360, window.innerWidth - 24);
+        const estimatedCardH = 205;
+        let left = rect.right + 16;
+        let top = rect.top;
+
+        if (left + cardW > window.innerWidth - 12) {
+          left = rect.left - cardW - 16;
+        }
+        if (left < 12) {
+          left = Math.max(12, Math.min(window.innerWidth - cardW - 12, rect.left));
+          top = rect.bottom + 16;
+        }
+        if (top + estimatedCardH > window.innerHeight - 12) {
+          top = Math.max(12, rect.top - estimatedCardH - 16);
+        }
+
+        tutorialCard.style.left = `${left}px`;
+        tutorialCard.style.top = `${top}px`;
+      }
+
+      function startTutorial() {
+        closeHelpModal();
+        tutorialIndex = 0;
+        tutorialFocusRing.classList.remove('hidden');
+        tutorialCard.classList.remove('hidden');
+        positionTutorial();
+      }
+
+      function endTutorial() {
+        tutorialFocusRing.classList.add('hidden');
+        tutorialCard.classList.add('hidden');
+      }
+
+      tutorialStartBtn.addEventListener('click', startTutorial);
+      tutorialExitBtn.addEventListener('click', endTutorial);
+
+      tutorialPrevBtn.addEventListener('click', () => {
+        if (tutorialIndex > 0) {
+          tutorialIndex--;
+          positionTutorial();
+        }
+      });
+
+      tutorialNextBtn.addEventListener('click', () => {
+        if (tutorialIndex >= tutorialSteps.length - 1) {
+          endTutorial();
+          return;
+        }
+        tutorialIndex++;
+        positionTutorial();
+      });
+
+      window.addEventListener('resize', () => {
+        if (!tutorialCard.classList.contains('hidden')) {
+          positionTutorial();
+        }
+      });
+
+      // ---------------- Print title ----------------
+      function openPrintTitleModal() {
+        const saved = localStorage.getItem('lucky_seat_last_print_title');
+        printTitleInput.value = saved || `${monthStr} 자리배치표`;
+        printTitleModal.classList.add('open');
+        setTimeout(() => {
+          printTitleInput.focus();
+          printTitleInput.select();
+        }, 50);
+      }
+
+      function closePrintTitleModal() {
+        printTitleModal.classList.remove('open');
+      }
+
+      printTitleCloseBtn.addEventListener('click', closePrintTitleModal);
+      printTitleCancelBtn.addEventListener('click', closePrintTitleModal);
+
+      printTitleConfirmBtn.addEventListener('click', () => {
+        const title = printTitleInput.value.trim() || `${monthStr} 자리배치표`;
+        printTitleDisplay.textContent = title;
+        localStorage.setItem('lucky_seat_last_print_title', title);
+        closePrintTitleModal();
+        setTimeout(() => window.print(), 80);
+      });
+
+      printTitleInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          printTitleConfirmBtn.click();
+        }
+      });
 
       // Web Audio Synthesizer sound effects
       let audioCtx = null;
@@ -2394,7 +2775,7 @@
       namesCloseBtn.addEventListener('click', () => namesModal.classList.remove('open'));
 
       printBtn.addEventListener('click', () => {
-        window.print();
+        openPrintTitleModal();
       });
 
       // Authentication state
@@ -2407,6 +2788,7 @@
             accountEmailDisplay.textContent = user.email || '-';
             setAuthMessage();
             setupUserSync();
+            maybeShowHelpOnLaunch();
           } else {
             if (unsubscribeSync) {
               unsubscribeSync();
