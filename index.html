@@ -552,6 +552,13 @@
       100% { transform: translateY(3px) scale(0.95) rotate(-2deg); }
     }
 
+
+    #auto-btn.auto-stop-mode {
+      background: #fff1f2 !important;
+      border-color: #fda4af !important;
+      color: #9f1239 !important;
+    }
+
     .seat-tile.is-empty {
       background: rgba(0,0,0,0.02);
       border: 2px dashed #d1d5db;
@@ -564,25 +571,25 @@
     }
 
     .seat-tile.just-assigned {
-      background: #fff7cc !important;
-      border-color: #f59e0b !important;
-      transform: scale(1.05);
-      animation: latestSeatSparkle 1.05s ease-in-out infinite;
+      background: #eadcff !important;
+      border-color: #9b7ce8 !important;
+      transform: scale(1.055);
+      animation: latestSeatSparkle 0.9s ease-in-out infinite;
       z-index: 5;
     }
 
     @keyframes latestSeatSparkle {
       0%, 100% {
-        background: #fff7cc;
-        border-color: #f59e0b;
-        box-shadow: 0 0 8px rgba(245, 158, 11, 0.45), 0 0 0 rgba(56, 189, 248, 0);
-        transform: scale(1.03);
+        background: #eadcff;
+        border-color: #9b7ce8;
+        box-shadow: 0 0 10px rgba(155, 124, 232, 0.55), 0 0 0 3px rgba(234, 220, 255, 0.45);
+        transform: scale(1.035);
       }
       50% {
-        background: #dff7ff;
-        border-color: #38bdf8;
-        box-shadow: 0 0 24px rgba(56, 189, 248, 0.9), 0 0 12px rgba(245, 158, 11, 0.55);
-        transform: scale(1.075);
+        background: #d8fff1;
+        border-color: #34b98b;
+        box-shadow: 0 0 28px rgba(52, 185, 139, 0.82), 0 0 14px rgba(155, 124, 232, 0.72), 0 0 0 5px rgba(216, 255, 241, 0.55);
+        transform: scale(1.085);
       }
     }
 
@@ -831,17 +838,12 @@
             <i data-lucide="users" class="w-3.5 h-3.5 shrink-0"></i>
             <span>명단 수정</span>
           </button>
-          <button id="cloud-open-btn" class="toolbar-btn col-span-2 !bg-emerald-50 hover:!bg-emerald-100 !border-emerald-300 !text-emerald-800" type="button">
-            <i data-lucide="cloud" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
-            <span id="cloud-status-text">☁️ Google 계정 실시간 연동</span>
-          </button>
           <button id="account-open-btn" class="toolbar-btn col-span-2 !py-1 !bg-sky-50 hover:!bg-sky-100 !border-sky-300 !text-sky-800" type="button">
             <i data-lucide="user-round" class="w-3.5 h-3.5 text-sky-600 shrink-0"></i>
             <span id="account-status-text">👤 내 계정</span>
           </button>
           <button id="auto-btn" class="toolbar-btn col-span-2 !py-1 !bg-amber-50 hover:!bg-amber-100 !border-amber-300 !text-amber-900" type="button">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 shrink-0 text-amber-600"></i>
-            <span>✨ 전체 자동 추첨</span>
+            <span id="auto-btn-text">✨ 전체 자동 추첨</span>
           </button>
         </div>
 
@@ -1026,33 +1028,6 @@
     </div>
   </div>
 
-  <!-- Cloud Sync / Google Account Modal -->
-  <div id="cloud-modal" class="modal-overlay">
-    <div class="modal-box !max-w-md p-5 text-slate-800">
-      <div class="flex items-center justify-between border-b pb-3">
-        <h3 class="text-lg font-extrabold flex items-center gap-2 text-emerald-800">
-          <span>☁️</span> 교실-교무실 실시간 연동
-        </h3>
-        <button id="cloud-close-btn" class="text-slate-400 hover:text-slate-700 p-1">
-          <i data-lucide="x" class="w-6 h-6"></i>
-        </button>
-      </div>
-
-      <div class="flex flex-col gap-3 pt-2">
-        <p class="text-xs text-slate-600 font-medium leading-relaxed">
-          <strong class="text-emerald-700">같은 Google 계정</strong>으로 로그인하면 교실 컴퓨터와 교무실 컴퓨터의 명단, 좌석 배열, 뽑기 결과, 테마가 자동으로 실시간 연동됩니다.
-        </p>
-
-        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
-          <div class="flex items-center justify-between gap-3">
-            <span class="text-xs font-bold text-emerald-900">현재 상태</span>
-            <span id="cloud-conn-desc" class="text-xs text-emerald-700 font-bold">Google 계정 연동 준비 중</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Account Modal -->
   <div id="account-modal" class="modal-overlay">
     <div class="modal-box !max-w-md p-5 text-slate-800">
@@ -1218,6 +1193,8 @@
       let lastAssignedKey = null;
       let viewPerspective = 'student';
       let isDrawing = false;
+      let isAutoDrawing = false;
+      let autoStopRequested = false;
 
       // Themes List
       const themeData = [
@@ -1233,12 +1210,7 @@
 
       let currentThemeId = 'forest';
 
-      // Cloud Elements — same Google account = same Firestore document
-      const cloudOpenBtn = document.getElementById("cloud-open-btn");
-      const cloudModal = document.getElementById("cloud-modal");
-      const cloudCloseBtn = document.getElementById("cloud-close-btn");
-      const cloudStatusText = document.getElementById("cloud-status-text");
-      const cloudConnDesc = document.getElementById("cloud-conn-desc");
+      // Cloud sync runs automatically after Google login.
 
       function getUserStateRef() {
         if (!db || !currentUser) return null;
@@ -1311,41 +1283,15 @@
       }
 
       function updateCloudUI(status = null) {
-        if (!currentUser) {
-          cloudStatusText.textContent = '☁️ Google 계정 실시간 연동';
-          cloudConnDesc.textContent = 'Google 로그인 후 자동 연동';
-          cloudConnDesc.className = 'text-xs text-slate-600 font-bold';
-          return;
-        }
-
-        if (status === 'error') {
-          cloudStatusText.textContent = '☁️ 연동 확인 필요';
-          cloudConnDesc.textContent = 'Firestore 연결을 확인해 주세요';
-          cloudConnDesc.className = 'text-xs text-rose-700 font-bold';
-        } else if (status === 'connecting') {
-          cloudStatusText.textContent = '☁️ Google 계정 연동 중...';
-          cloudConnDesc.textContent = '내 데이터를 불러오는 중';
-          cloudConnDesc.className = 'text-xs text-amber-700 font-bold';
-        } else {
-          cloudStatusText.textContent = '☁️ Google 계정 실시간 연동됨';
-          cloudConnDesc.textContent = `${currentUser.email || '현재 Google 계정'}과 자동 연동 중`;
-          cloudConnDesc.className = 'text-xs text-emerald-700 font-bold';
-        }
+        // Sync is automatic; no separate status tab is shown in the main UI.
       }
-
-      cloudOpenBtn.addEventListener('click', () => {
-        updateCloudUI(currentUser ? 'connected' : null);
-        cloudModal.classList.add('open');
-      });
-
-      cloudCloseBtn.addEventListener('click', () => cloudModal.classList.remove('open'));
-      updateCloudUI();
 
       // DOM Elements
       const numberGridEl = document.getElementById("number-grid");
       const seatGridWrapEl = document.getElementById("seat-grid-wrap");
       const luckyBtn = document.getElementById("lucky-btn");
       const autoBtn = document.getElementById("auto-btn");
+      const autoBtnText = document.getElementById("auto-btn-text");
       const resetBtn = document.getElementById("reset-btn");
       const printBtn = document.getElementById("print-btn");
       const statusTextEl = document.getElementById("status-text");
@@ -1654,6 +1600,19 @@
         renderSeatGrid();
       });
 
+      function updateAutoButtonUI(state = 'idle') {
+        if (state === 'running') {
+          autoBtnText.textContent = '⏹ 자동 추첨 멈추기';
+          autoBtn.classList.add('auto-stop-mode');
+        } else if (state === 'stopping') {
+          autoBtnText.textContent = '⏳ 현재 추첨 후 멈춤';
+          autoBtn.classList.add('auto-stop-mode');
+        } else {
+          autoBtnText.textContent = '✨ 전체 자동 추첨';
+          autoBtn.classList.remove('auto-stop-mode');
+        }
+      }
+
       luckyBtn.addEventListener('click', async () => {
         if (isDrawing || selectedStudentNum === null) return;
 
@@ -1681,7 +1640,7 @@
 
         isDrawing = true;
         luckyBtn.disabled = true;
-        autoBtn.disabled = true;
+        autoBtn.disabled = !isAutoDrawing;
 
         const currentNum = selectedStudentNum;
         const currentName = studentNames[currentNum - 1] || `${currentNum}번`;
@@ -1729,10 +1688,15 @@
         }
 
         isDrawing = false;
-        autoBtn.disabled = false;
+        if (!isAutoDrawing) autoBtn.disabled = false;
       });
 
       autoBtn.addEventListener('click', async () => {
+        if (isAutoDrawing) {
+          autoStopRequested = true;
+          updateAutoButtonUI('stopping');
+          return;
+        }
         if (isDrawing) return;
 
         const unassignedNums = [];
@@ -1747,17 +1711,37 @@
           return;
         }
 
-        for (const num of unassignedNums) {
-          selectedStudentNum = num;
-          updateNumberGridState();
-          updateStatusText();
+        isAutoDrawing = true;
+        autoStopRequested = false;
+        autoBtn.disabled = false;
+        updateAutoButtonUI('running');
 
-          luckyBtn.click();
+        try {
+          for (const num of unassignedNums) {
+            if (autoStopRequested) break;
 
-          while (isDrawing) {
-            await new Promise(r => setTimeout(r, 80));
+            selectedStudentNum = num;
+            updateNumberGridState();
+            updateStatusText();
+
+            luckyBtn.click();
+
+            while (isDrawing) {
+              await new Promise(r => setTimeout(r, 80));
+            }
+
+            if (autoStopRequested) break;
+            await new Promise(r => setTimeout(r, 250));
           }
-          await new Promise(r => setTimeout(r, 250));
+        } finally {
+          isAutoDrawing = false;
+          const wasStopped = autoStopRequested;
+          autoStopRequested = false;
+          autoBtn.disabled = false;
+          updateAutoButtonUI('idle');
+          if (wasStopped) {
+            statusTextEl.textContent = '⏹ 자동 추첨을 멈췄습니다. 원하는 번호를 선택해 계속 진행할 수 있어요.';
+          }
         }
       });
 
