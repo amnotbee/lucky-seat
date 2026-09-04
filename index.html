@@ -8,6 +8,7 @@
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- Google Fonts: Jua, Gowun Dodum & Noto Sans KR -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1160,27 +1161,36 @@
         
         <textarea id="bulk-names-textarea" rows="2" placeholder="이름을 띄어쓰기, 쉼표(,), 또는 줄바꿈으로 입력해주세요.&#10;예: 김규원, 김민준, 김선빈" class="w-full text-xs p-2.5 border rounded-lg resize-none focus:outline-none focus:border-emerald-500 font-sans leading-relaxed"></textarea>
 
-        <div class="flex items-center gap-2">
-          <button id="bulk-apply-btn" type="button" class="btn-secondary !py-1.5 !px-3 !text-xs flex-1">
+        <div class="grid grid-cols-2 gap-2">
+          <button id="bulk-apply-btn" type="button" class="btn-secondary !py-1.5 !px-3 !text-xs col-span-2">
             <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i>
             <span>텍스트 일괄 입력</span>
           </button>
-          
-          <label class="btn-secondary !py-1.5 !px-3 !text-xs flex-1 cursor-pointer justify-center">
-            <i data-lucide="file-text" class="w-3.5 h-3.5 text-blue-600"></i>
-            <span>파일 불러오기 (.txt, .csv)</span>
-            <input type="file" id="names-file-input" accept=".txt,.csv" class="hidden">
+
+          <button id="excel-template-download-btn" type="button" class="btn-secondary !py-1.5 !px-3 !text-xs">
+            <i data-lucide="download" class="w-3.5 h-3.5 text-blue-600"></i>
+            <span>엑셀 양식 다운로드</span>
+          </button>
+
+          <label class="btn-secondary !py-1.5 !px-3 !text-xs cursor-pointer justify-center">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>작성한 엑셀 불러오기</span>
+            <input type="file" id="names-file-input" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" class="hidden">
           </label>
         </div>
+
+        <p class="text-[11px] leading-relaxed text-slate-500 font-medium">
+          💡 엑셀 양식의 <b>B열 '이름'</b>만 작성하세요. 전학 등 결번은 해당 번호의 이름을 비워 두면 자리 뽑기에서 자동 제외됩니다.
+        </p>
       </div>
 
       <div class="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-xs gap-2">
         <label for="total-students-input" class="font-bold text-emerald-900 flex items-center gap-1.5 shrink-0 text-sm">
-          <span>👨‍🎓 학생 수:</span>
+          <span>👨‍🎓 마지막 번호:</span>
         </label>
         <div class="flex items-center gap-1.5 shrink-0">
           <input id="total-students-input" type="number" min="1" max="50" value="22" class="w-16 border-2 border-emerald-300 rounded-lg px-2 py-1 text-center font-bold text-emerald-800 bg-white text-sm">
-          <span class="text-slate-700 font-bold text-sm">명</span>
+          <span class="text-slate-700 font-bold text-sm">번</span>
         </div>
         <button id="names-clear-all-btn" type="button" class="btn-secondary !py-1.5 !px-3 !text-xs !text-rose-700 !border-rose-300 hover:!bg-rose-50 ml-auto shrink-0 flex items-center gap-1">
           <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-500"></i>
@@ -1188,12 +1198,12 @@
         </button>
       </div>
 
-      <p class="text-xs text-slate-500 font-medium">각 학생 번호에 맞는 이름을 입력해 주세요.</p>
+      <p class="text-xs text-slate-500 font-medium">각 학생 번호에 맞는 이름을 입력해 주세요. 이름이 비어 있는 번호는 추첨에서 자동 제외됩니다.</p>
 
       <div id="names-input-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[280px] overflow-y-auto p-1.5"></div>
 
       <div class="flex justify-end gap-2 pt-3 border-t">
-        <button id="names-apply-btn" class="btn-draw !w-auto px-6 !py-2.5 !text-sm">이름 & 학생 수 저장하기</button>
+        <button id="names-apply-btn" class="btn-draw !w-auto px-6 !py-2.5 !text-sm">명단 저장하기</button>
       </div>
     </div>
   </div>
@@ -1507,6 +1517,7 @@
       const bulkNamesTextarea = document.getElementById("bulk-names-textarea");
       const bulkApplyBtn = document.getElementById("bulk-apply-btn");
       const bulkClearBtn = document.getElementById("bulk-clear-btn");
+      const excelTemplateDownloadBtn = document.getElementById("excel-template-download-btn");
       const namesFileInput = document.getElementById("names-file-input");
       const namesClearAllBtn = document.getElementById("names-clear-all-btn");
 
@@ -1645,9 +1656,28 @@
         });
       }
 
+      function isActiveStudent(num) {
+        const name = studentNames[num - 1];
+        return typeof name === 'string' && name.trim() !== '';
+      }
+
+      function getActiveStudentNumbers() {
+        const nums = [];
+        for (let i = 1; i <= totalStudents; i++) {
+          if (isActiveStudent(i)) nums.push(i);
+        }
+        return nums;
+      }
+
+      function getActiveStudentCount() {
+        return getActiveStudentNumbers().length;
+      }
+
       function renderNumberGrid() {
         numberGridEl.innerHTML = '';
         for (let i = 1; i <= totalStudents; i++) {
+          if (!isActiveStudent(i)) continue;
+
           const btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'student-num-btn';
@@ -1695,16 +1725,23 @@
       }
 
       function updateStatusText() {
-        const assignedCount = Object.keys(assignedMap).length;
+        const activeNums = getActiveStudentNumbers();
+        const activeSet = new Set(activeNums);
+        const assignedCount = Object.values(assignedMap).filter(item => activeSet.has(item.num)).length;
+        const activeCount = activeNums.length;
+
         if (selectedStudentNum !== null) {
           const name = studentNames[selectedStudentNum - 1] || `${selectedStudentNum}번`;
           statusTextEl.innerHTML = `<span class="font-bold text-amber-800">${selectedStudentNum}번 (${name})</span> 선택 중! '행운 뽑기'를 눌러주세요.`;
           luckyBtn.disabled = false;
-        } else if (assignedCount >= totalStudents) {
+        } else if (activeCount === 0) {
+          statusTextEl.textContent = '학생 명단을 입력해 주세요.';
+          luckyBtn.disabled = true;
+        } else if (assignedCount >= activeCount) {
           statusTextEl.textContent = '🎉 모든 학생의 자리가 배치되었습니다!';
           luckyBtn.disabled = true;
         } else {
-          statusTextEl.textContent = `번호를 선택해 주세요. (남은 인원: ${totalStudents - assignedCount}명)`;
+          statusTextEl.textContent = `번호를 선택해 주세요. (남은 인원: ${activeCount - assignedCount}명)`;
           luckyBtn.disabled = true;
         }
       }
@@ -1891,7 +1928,7 @@
 
         // 마지막 학생까지 모두 배정되면 최근 배정 강조를 해제해서
         // 모든 배정 좌석이 동일한 기본 배정 색상으로 보이게 합니다.
-        const allStudentsAssigned = Object.keys(assignedMap).length >= totalStudents;
+        const allStudentsAssigned = Object.keys(assignedMap).length >= getActiveStudentCount();
         lastAssignedKey = allStudentsAssigned ? null : chosenKey;
 
         selectedStudentNum = null;
@@ -1922,6 +1959,7 @@
 
         const unassignedNums = [];
         for (let i = 1; i <= totalStudents; i++) {
+          if (!isActiveStudent(i)) continue;
           if (!Object.values(assignedMap).some(item => item.num === i)) {
             unassignedNums.push(i);
           }
@@ -2083,9 +2121,14 @@
         const val = parseInt(totalStudentsInput.value) || 22;
         totalStudents = Math.max(1, Math.min(50, val));
         totalStudentsInput.value = totalStudents;
-        while (studentNames.length < totalStudents) {
-          studentNames.push(`${studentNames.length + 1}번`);
+
+        if (studentNames.length > totalStudents) {
+          studentNames = studentNames.slice(0, totalStudents);
         }
+        while (studentNames.length < totalStudents) {
+          studentNames.push('');
+        }
+
         renderNamesInputGrid();
       });
 
@@ -2106,19 +2149,188 @@
       });
 
       namesClearAllBtn.addEventListener('click', () => {
-        studentNames = Array.from({ length: totalStudents }, (_, i) => `${i + 1}번`);
+        studentNames = Array.from({ length: totalStudents }, () => '');
         renderNamesInputGrid();
       });
 
-      namesFileInput.addEventListener('change', (e) => {
+      const EXCEL_TEMPLATE_BASE64 = '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';
+
+      excelTemplateDownloadBtn.addEventListener('click', () => {
+        try {
+          const binary = atob(EXCEL_TEMPLATE_BASE64);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+
+          const blob = new Blob([bytes], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = '행운의자리_학생명단_양식.xlsx';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error('Excel template download failed:', error);
+          alert('엑셀 양식을 내려받는 중 오류가 발생했습니다.');
+        }
+      });
+
+      namesFileInput.addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          bulkNamesTextarea.value = evt.target.result;
-          bulkApplyBtn.click();
-        };
-        reader.readAsText(file);
+
+        try {
+          if (typeof XLSX === 'undefined') {
+            alert('엑셀 파일을 읽는 기능을 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
+            return;
+          }
+
+          const ext = file.name.split('.').pop()?.toLowerCase();
+          if (!['xlsx', 'xls'].includes(ext)) {
+            alert('엑셀 파일(.xlsx 또는 .xls)만 불러올 수 있습니다.');
+            return;
+          }
+
+          const buffer = await file.arrayBuffer();
+          const workbook = XLSX.read(buffer, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+
+          if (!firstSheetName) {
+            alert('엑셀 파일에 시트가 없습니다.');
+            return;
+          }
+
+          const sheet = workbook.Sheets[firstSheetName];
+          const rows = XLSX.utils.sheet_to_json(sheet, {
+            header: 1,
+            defval: '',
+            raw: false,
+            blankrows: true
+          });
+
+          if (!rows.length) {
+            alert('엑셀 파일에서 학생 명단을 찾지 못했습니다.');
+            return;
+          }
+
+          const normalize = (value) =>
+            String(value ?? '').trim().toLowerCase().replace(/\s+/g, ' ');
+
+          const headerRow = (rows[0] || []).map(normalize);
+          const numberHeaders = new Set(['번호', '학생번호', '학생 번호', 'num', 'number', 'no']);
+          const nameHeaders = new Set(['이름', '성명', '학생이름', '학생 이름', 'name', 'student name']);
+
+          const numberColumn = headerRow.findIndex(v => numberHeaders.has(v));
+          let nameColumn = headerRow.findIndex(v => nameHeaders.has(v));
+
+          // 공식 양식: 번호 열 + 이름 열
+          if (numberColumn >= 0 && nameColumn >= 0) {
+            const rosterRows = rows.slice(1);
+            let lastActiveNumber = 0;
+
+            // 이름이 실제로 입력된 가장 큰 번호를 마지막 번호로 사용합니다.
+            for (const row of rosterRows) {
+              const num = parseInt(String(row[numberColumn] ?? '').trim(), 10);
+              const name = String(row[nameColumn] ?? '').trim();
+
+              if (Number.isInteger(num) && num >= 1 && num <= 50 && name) {
+                lastActiveNumber = Math.max(lastActiveNumber, num);
+              }
+            }
+
+            if (lastActiveNumber === 0) {
+              alert("엑셀 양식의 B열 '이름'을 입력한 뒤 다시 불러와 주세요.");
+              return;
+            }
+
+            const importedNames = Array.from({ length: lastActiveNumber }, () => '');
+
+            for (const row of rosterRows) {
+              const num = parseInt(String(row[numberColumn] ?? '').trim(), 10);
+              if (!Number.isInteger(num) || num < 1 || num > lastActiveNumber) continue;
+
+              // 이름이 빈 번호는 결번으로 유지되어 추첨 화면에 나타나지 않습니다.
+              importedNames[num - 1] = String(row[nameColumn] ?? '').trim();
+            }
+
+            totalStudents = lastActiveNumber;
+            totalStudentsInput.value = totalStudents;
+            studentNames = importedNames;
+            bulkNamesTextarea.value = '';
+            renderNamesInputGrid();
+
+            const activeCount = importedNames.filter(name => name.trim() !== '').length;
+            alert(`엑셀 명단을 불러왔습니다. 재학생 ${activeCount}명 / 마지막 번호 ${lastActiveNumber}번`);
+            return;
+          }
+
+          // 공식 양식이 아닌 기존 엑셀도 이름 열을 자동 탐색합니다.
+          const cleanedRows = rows
+            .map(row => Array.isArray(row) ? row.map(cell => String(cell ?? '').trim()) : [])
+            .filter(row => row.some(cell => cell !== ''));
+
+          const headerKeywords = new Set([
+            '이름', '성명', '학생이름', '학생 이름',
+            'name', 'student name'
+          ]);
+
+          nameColumn = cleanedRows[0].findIndex(cell =>
+            headerKeywords.has(normalize(cell))
+          );
+          let startRow = nameColumn >= 0 ? 1 : 0;
+
+          if (nameColumn < 0) {
+            const maxCols = Math.max(...cleanedRows.map(row => row.length));
+            let bestColumn = 0;
+            let bestScore = -1;
+
+            for (let c = 0; c < maxCols; c++) {
+              let score = 0;
+              for (const row of cleanedRows.slice(0, 50)) {
+                const value = String(row[c] ?? '').trim();
+                if (!value) continue;
+                if (!/^\d+$/.test(value)) {
+                  score += 2;
+                  if (/[가-힣A-Za-z]/.test(value)) score += 2;
+                }
+              }
+              if (score > bestScore) {
+                bestScore = score;
+                bestColumn = c;
+              }
+            }
+            nameColumn = bestColumn;
+          }
+
+          let parsedNames = cleanedRows
+            .slice(startRow)
+            .map(row => String(row[nameColumn] ?? '').trim())
+            .filter(Boolean)
+            .filter(name => !headerKeywords.has(normalize(name)));
+
+          if (!parsedNames.length) {
+            alert('엑셀 파일에서 학생 이름을 찾지 못했습니다.');
+            return;
+          }
+
+          parsedNames = parsedNames.slice(0, 50);
+          totalStudents = parsedNames.length;
+          totalStudentsInput.value = totalStudents;
+          studentNames = parsedNames;
+          bulkNamesTextarea.value = parsedNames.join('\n');
+          renderNamesInputGrid();
+
+        } catch (error) {
+          console.error('Excel file load failed:', error);
+          alert('엑셀 파일을 읽는 중 오류가 발생했습니다. 파일 형식을 확인해 주세요.');
+        } finally {
+          namesFileInput.value = '';
+        }
       });
 
       namesApplyBtn.addEventListener('click', () => {
@@ -2126,7 +2338,7 @@
         inputs.forEach(input => {
           const idx = parseInt(input.dataset.idx);
           const val = input.value.trim();
-          if (val) studentNames[idx] = val;
+          studentNames[idx] = val;
         });
         assignedMap = {};
         selectedStudentNum = null;
