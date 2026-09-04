@@ -746,31 +746,138 @@
     }
 
     /* Print styling support */
+    @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+
     @media print {
-      body {
+      html, body {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
         background: white !important;
         overflow: visible !important;
       }
-      .board-container {
-        height: auto !important;
-        max-width: 100% !important;
-        padding: 0 !important;
+
+      body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
-      .draw-panel, .top-toolbar-box, .action-btn-group, .modal-overlay, .sub-title span {
+
+      #auth-gate,
+      .draw-panel,
+      .top-toolbar-box,
+      .action-btn-group,
+      .modal-overlay,
+      .sub-title span {
         display: none !important;
       }
+
+      .board-container {
+        width: 100% !important;
+        max-width: 190mm !important;
+        min-height: 277mm !important;
+        height: auto !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        overflow: visible !important;
+      }
+
+      .app-header {
+        margin: 0 0 7mm 0 !important;
+      }
+
+      .main-title {
+        font-size: 24pt !important;
+      }
+
+      .sub-title {
+        font-size: 10.5pt !important;
+        margin-top: 2mm !important;
+      }
+
       .content-layout {
         display: block !important;
+        flex: none !important;
+        width: 100% !important;
+        overflow: visible !important;
       }
+
       .seat-panel {
+        width: 100% !important;
+        margin: 0 auto !important;
         border: none !important;
         box-shadow: none !important;
         background: transparent !important;
         padding: 0 !important;
+        overflow: visible !important;
       }
+
+      .seat-panel .panel-header {
+        margin-bottom: 4mm !important;
+      }
+
+      .seat-panel .panel-title {
+        font-size: 16pt !important;
+      }
+
+      .seat-panel .panel-desc {
+        font-size: 8.5pt !important;
+      }
+
       .seat-map-container {
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 4mm !important;
         border: 2px solid #000 !important;
+        border-radius: 5mm !important;
         background: #fff !important;
+        flex: none !important;
+        overflow: visible !important;
+      }
+
+      .teacher-podium {
+        min-height: 12mm !important;
+        padding: 2.5mm !important;
+        font-size: 12pt !important;
+        margin-bottom: 3mm !important;
+      }
+
+      .seat-grid-wrap {
+        width: 100% !important;
+        height: 135mm !important;
+        min-height: 135mm !important;
+        flex: none !important;
+        gap: 2.5mm !important;
+      }
+
+      .seat-tile {
+        min-height: 0 !important;
+        border-width: 2px !important;
+        border-radius: 4mm !important;
+        padding: 2mm !important;
+        box-shadow: none !important;
+      }
+
+      .seat-num-badge {
+        top: 2mm !important;
+        left: 2mm !important;
+        font-size: 9.5pt !important;
+        padding: 0.5mm 2mm !important;
+      }
+
+      .seat-student-name {
+        font-size: 22pt !important;
+        margin-top: 3mm !important;
+      }
+
+      .seat-heart-icon {
+        font-size: 22pt !important;
       }
     }
   </style>
@@ -844,6 +951,14 @@
           <button id="auto-btn" class="toolbar-btn col-span-2 !py-1 !bg-amber-50 hover:!bg-amber-100 !border-amber-300 !text-amber-900" type="button">
             <span id="auto-btn-text">✨ 전체 자동 추첨</span>
           </button>
+          <div class="col-span-2 flex items-center justify-center gap-2 px-2 py-1 rounded-lg bg-white/70 border border-amber-200 font-sans">
+            <label for="auto-speed-select" class="text-[11px] font-bold text-amber-900 whitespace-nowrap">⏱ 자동 속도</label>
+            <select id="auto-speed-select" class="flex-1 max-w-[160px] text-[11px] font-bold text-slate-700 bg-white border border-amber-300 rounded-md px-2 py-1 outline-none cursor-pointer">
+              <option value="normal">보통</option>
+              <option value="fast">빠르게</option>
+              <option value="turbo">매우 빠르게</option>
+            </select>
+          </div>
         </div>
 
         <div class="panel-header">
@@ -1301,6 +1416,7 @@
       const luckyBtn = document.getElementById("lucky-btn");
       const autoBtn = document.getElementById("auto-btn");
       const autoBtnText = document.getElementById("auto-btn-text");
+      const autoSpeedSelect = document.getElementById("auto-speed-select");
       const resetBtn = document.getElementById("reset-btn");
       const printBtn = document.getElementById("print-btn");
       const statusTextEl = document.getElementById("status-text");
@@ -1609,6 +1725,28 @@
         renderSeatGrid();
       });
 
+      const AUTO_SPEED_SETTINGS = {
+        normal: { drawFactor: 1, betweenMs: 250 },
+        fast: { drawFactor: 0.55, betweenMs: 120 },
+        turbo: { drawFactor: 0.28, betweenMs: 50 }
+      };
+
+      // 자동 추첨 속도는 이 브라우저에 기억합니다.
+      const savedAutoSpeed = localStorage.getItem('lucky_seat_auto_speed');
+      if (savedAutoSpeed && AUTO_SPEED_SETTINGS[savedAutoSpeed] && autoSpeedSelect) {
+        autoSpeedSelect.value = savedAutoSpeed;
+      }
+      if (autoSpeedSelect) {
+        autoSpeedSelect.addEventListener('change', () => {
+          localStorage.setItem('lucky_seat_auto_speed', autoSpeedSelect.value);
+        });
+      }
+
+      function getAutoSpeedSetting() {
+        const key = autoSpeedSelect?.value || 'normal';
+        return AUTO_SPEED_SETTINGS[key] || AUTO_SPEED_SETTINGS.normal;
+      }
+
       function updateAutoButtonUI(state = 'idle') {
         if (state === 'running') {
           autoBtnText.textContent = '⏹ 자동 추첨 멈추기';
@@ -1654,7 +1792,9 @@
         const currentNum = selectedStudentNum;
         const currentName = studentNames[currentNum - 1] || `${currentNum}번`;
 
-        const delays = [35, 35, 45, 45, 55, 65, 80, 100, 130, 170, 220, 280, 360, 480];
+        const baseDelays = [35, 35, 45, 45, 55, 65, 80, 100, 130, 170, 220, 280, 360, 480];
+        const drawFactor = isAutoDrawing ? getAutoSpeedSetting().drawFactor : 1;
+        const delays = baseDelays.map(ms => Math.max(12, Math.round(ms * drawFactor)));
         let currentHighlightKey = null;
 
         for (let i = 0; i < delays.length; i++) {
@@ -1740,7 +1880,7 @@
             }
 
             if (autoStopRequested) break;
-            await new Promise(r => setTimeout(r, 250));
+            await new Promise(r => setTimeout(r, getAutoSpeedSetting().betweenMs));
           }
         } finally {
           isAutoDrawing = false;
