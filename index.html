@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="app-page-title">🍀 나의 행운은 어디에 ✨</title>
 
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#2e7d32">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="행운의 자리">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
@@ -1159,7 +1169,7 @@
           </button>
         </div>
         
-        <textarea id="bulk-names-textarea" rows="2" placeholder="이름을 띄어쓰기, 쉼표(,), 또는 줄바꿈으로 입력해주세요.&#10;예: 고웅비, 유정남, 존박 " class="w-full text-xs p-2.5 border rounded-lg resize-none focus:outline-none focus:border-emerald-500 font-sans leading-relaxed"></textarea>
+        <textarea id="bulk-names-textarea" rows="2" placeholder="이름을 띄어쓰기, 쉼표(,), 또는 줄바꿈으로 입력해주세요.&#10;예: 김규원, 김민준, 김선빈" class="w-full text-xs p-2.5 border rounded-lg resize-none focus:outline-none focus:border-emerald-500 font-sans leading-relaxed"></textarea>
 
         <div class="grid grid-cols-2 gap-2">
           <button id="bulk-apply-btn" type="button" class="btn-secondary !py-1.5 !px-3 !text-xs col-span-2">
@@ -2425,5 +2435,23 @@
       initApp();
     }
   </script>
+
+  <script>
+    // PWA Service Worker 등록
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('./service-worker.js')
+          .then((registration) => {
+            // 새 버전 확인
+            registration.update().catch(() => {});
+          })
+          .catch((error) => {
+            console.error('Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
+
 </body>
 </html>
