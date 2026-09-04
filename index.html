@@ -1888,7 +1888,11 @@
 
         const chosenKey = currentHighlightKey;
         assignedMap[chosenKey] = { num: currentNum, name: currentName };
-        lastAssignedKey = chosenKey;
+
+        // 마지막 학생까지 모두 배정되면 최근 배정 강조를 해제해서
+        // 모든 배정 좌석이 동일한 기본 배정 색상으로 보이게 합니다.
+        const allStudentsAssigned = Object.keys(assignedMap).length >= totalStudents;
+        lastAssignedKey = allStudentsAssigned ? null : chosenKey;
 
         selectedStudentNum = null;
         renderSeatGrid();
